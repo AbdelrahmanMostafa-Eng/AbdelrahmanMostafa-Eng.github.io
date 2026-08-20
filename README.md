@@ -4,13 +4,14 @@ Personal portfolio for **Abdelrahman Mostafa**, an aspiring computer engineer ex
 
 ## Design direction
 
-The site uses a light-first editorial visual system with a warm paper background, deep ink typography, coral accents, an engineering grid, and a restrained teal/night palette for depth. `DM Serif Display` gives the headings a human, premium voice while `Manrope` keeps the interface precise and readable.
+The site uses a light-first software-engineering visual system with a cool workspace background, deep ink typography, blue/orange status accents, a measured engineering grid, and a developer-console dark theme. `Space Grotesk` keeps the interface direct and product-minded while `IBM Plex Mono` handles navigation, metadata, coordinates, and terminal-style details.
 
 The experience includes:
 
 - A light/dark theme toggle with localStorage persistence.
 - Responsive navigation and smooth anchor scrolling.
-- Cursor shadow and cursor dot on fine pointers.
+- A restrained cursor halo and cursor dot on fine pointers.
+- Layered, directional surface shadows that increase on hover without looking glossy.
 - Hover states, magnetic buttons, 3D tilt cards, and scroll reveal motion.
 - An icon-only back-to-top control with a hover tooltip.
 - Icon-linked GitHub, LinkedIn, Instagram, X, and email destinations.
