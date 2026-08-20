@@ -109,4 +109,63 @@
       button.addEventListener('pointerleave', () => { button.style.transform = ''; });
     });
   }
+
+  const typewriter = document.querySelector('[data-typewriter]');
+  const commands = ['git status --short', 'python simulate.py --laps 12', 'cargo test --workspace', 'git commit -m "keep building"'];
+  if (typewriter) {
+    if (reduceMotion) {
+      typewriter.textContent = commands[0];
+    } else {
+      let commandIndex = 0;
+      let characterIndex = commands[0].length;
+      let deleting = true;
+      const typeNextCommand = () => {
+        const command = commands[commandIndex];
+        if (!deleting) {
+          characterIndex += 1;
+          typewriter.textContent = command.slice(0, characterIndex);
+          if (characterIndex >= command.length) {
+            deleting = true;
+            window.setTimeout(typeNextCommand, 1900);
+            return;
+          }
+        } else {
+          characterIndex -= 1;
+          typewriter.textContent = command.slice(0, characterIndex);
+          if (characterIndex <= 0) {
+            deleting = false;
+            commandIndex = (commandIndex + 1) % commands.length;
+          }
+        }
+        window.setTimeout(typeNextCommand, deleting ? 38 : 62);
+      };
+      window.setTimeout(typeNextCommand, 1900);
+    }
+  }
+
+  const systemReadout = document.querySelector('[data-system-readout]');
+  const systemLog = document.querySelector('[data-system-log]');
+  const systemMeter = document.querySelector('.readout-meter i');
+  const systemNodes = document.querySelectorAll('[data-system-node]');
+  const modules = {
+    simulation: { label: 'SIMULATION', log: 'telemetry pipeline stable', meter: '68%' },
+    security: { label: 'SECURITY', log: 'secrets isolated in memory', meter: '84%' },
+    data: { label: 'DATA', log: 'lap traces ready for analysis', meter: '76%' },
+  };
+  const activateModule = (name) => {
+    const module = modules[name] || modules.simulation;
+    systemReadout && (systemReadout.textContent = module.label);
+    systemLog && (systemLog.textContent = module.log);
+    systemMeter && (systemMeter.style.width = module.meter);
+    systemNodes.forEach((node) => {
+      const active = node.dataset.systemNode === name;
+      node.classList.toggle('is-active', active);
+      node.setAttribute('aria-pressed', String(active));
+    });
+  };
+  systemNodes.forEach((node) => {
+    node.addEventListener('click', () => activateModule(node.dataset.systemNode));
+    node.addEventListener('mouseenter', () => activateModule(node.dataset.systemNode));
+  });
+  if (systemNodes.length) activateModule('simulation');
 })();
