@@ -26,7 +26,7 @@
 
     <header class="site-header" id="top">
       <a class="brand" href="#home" aria-label="Back to home">
-        <span class="brand-mark brand-avatar"><img src="https://avatars.githubusercontent.com/u/252904306?v=4" alt="" /><span>AM</span></span>
+        <span class="brand-mark brand-avatar"><img src="https://avatars.githubusercontent.com/u/252904306?v=4" alt="" /></span>
         <span class="brand-name">Abdelrahman<br /><em>Mostafa</em></span>
       </a>
       <nav class="desktop-nav" aria-label="Primary navigation">
@@ -69,21 +69,27 @@
         <div class="hero-visual reveal reveal-delay-1" aria-label="Interactive software systems visualization">
           <div class="orbit orbit-one"></div>
           <div class="orbit orbit-two"></div>
-          <div class="system-visual tilt-card" data-tilt data-system-visual>
-            <div class="system-grid"></div>
-            <div class="system-topbar"><span><i class="signal-dot"></i> system_map / live</span><span>v0.26.08</span></div>
-            <div class="system-stage">
-              <div class="system-connection connection-one"></div><div class="system-connection connection-two"></div><div class="system-connection connection-three"></div>
-              <button class="system-node node-one" type="button" data-system-node="simulation" aria-label="Show simulation module"><span></span></button>
-              <button class="system-node node-two" type="button" data-system-node="security" aria-label="Show security module"><span></span></button>
-              <button class="system-node node-three" type="button" data-system-node="data" aria-label="Show data module"><span></span></button>
-              <div class="system-core">
-                <div class="core-window"><div class="core-window-head"><span class="window-dots"><i></i><i></i><i></i></span><span>core.py</span></div><div class="core-code"><span><b>01</b> <em>def</em> build_system():</span><span><b>02</b> &nbsp; modules = [</span><span><b>03</b> &nbsp;&nbsp; "data", "logic",</span><span><b>04</b> &nbsp;&nbsp; "trust" ]</span><span><b>05</b> &nbsp; <strong>return</strong> ready</span></div></div>
-                <div class="core-layer layer-back"></div><div class="core-layer layer-front"></div>
+          <div class="workbench-visual tilt-card" data-tilt data-system-visual aria-label="Interactive engineering workbench">
+            <div class="workbench-grid"></div>
+            <div class="workbench-topline"><span><i class="signal-dot"></i> FIELD NOTE / 003</span><span>LIVE · 18ms</span></div>
+            <div class="workbench-stage">
+              <div class="blueprint-card card-back"></div>
+              <div class="blueprint-card card-main">
+                <div class="blueprint-head"><span>race_sim / telemetry</span><span>plot 03</span></div>
+                <div class="blueprint-body">
+                  <svg class="telemetry-plot" viewBox="0 0 360 190" aria-hidden="true"><path class="plot-grid" d="M0 25H360M0 65H360M0 105H360M0 145H360M45 0V190M105 0V190M165 0V190M225 0V190M285 0V190M345 0V190" /><path class="plot-axis" d="M20 12V170H350" /><path class="plot-line plot-line-ghost" d="M23 136 C45 116 54 151 75 124 S104 93 125 121 S157 92 179 97 S210 133 230 103 S259 79 278 88 S307 57 347 43" /><path class="plot-line" d="M23 145 C45 124 57 139 76 118 S105 104 126 130 S157 77 179 106 S211 115 231 82 S258 92 278 64 S309 76 347 33" /><circle class="plot-point point-one" cx="126" cy="130" r="4" /><circle class="plot-point point-two" cx="231" cy="82" r="4" /><circle class="plot-point point-three" cx="347" cy="33" r="4" /></svg>
+                  <span class="plot-label label-pace">Δ pace</span><span class="plot-label label-laps">12 laps</span><span class="plot-label label-stint">STINT 04</span>
+                </div>
+                <div class="blueprint-footer"><span>sample window 0—12 laps</span><span class="plot-status">model / ready</span></div>
               </div>
+              <div class="workbench-note note-model"><span>01</span><b>model loop</b><small>iterate / measure</small></div>
+              <div class="workbench-note note-trust"><span>02</span><b>trust layer</b><small>safe by default</small></div>
+              <div class="workbench-node node-one" data-system-node="simulation" role="button" tabindex="0" aria-label="Show simulation module"><span></span></div>
+              <div class="workbench-node node-two" data-system-node="security" role="button" tabindex="0" aria-label="Show security module"><span></span></div>
+              <div class="workbench-node node-three" data-system-node="data" role="button" tabindex="0" aria-label="Show data module"><span></span></div>
             </div>
-            <div class="system-readout"><span class="readout-label">ACTIVE MODULE</span><strong data-system-readout>SIMULATION</strong><span class="readout-meter"><i></i></span></div>
-            <div class="system-log"><span>↳ <b data-system-log>telemetry pipeline stable</b></span><span>latency <strong>18ms</strong></span></div>
+            <div class="workbench-readout"><span class="readout-label">ACTIVE MODULE</span><strong data-system-readout>SIMULATION</strong><span class="readout-meter"><i></i></span></div>
+            <div class="workbench-log"><span>↳ <b data-system-log>telemetry pipeline stable</b></span><span>status <strong>nominal</strong></span></div>
           </div>
           <div class="floating-note note-top"><span class="note-index">01</span><span>Systems<br />thinking</span></div>
           <div class="floating-note note-bottom"><span class="note-index">02</span><span>Code<br />in motion</span></div>
@@ -176,9 +182,13 @@
       </section>
     </main>
 
-    <footer class="site-footer section-shell">
-      <div class="footer-top"><a class="brand" href="#home"><span class="brand-mark brand-avatar"><img src="https://avatars.githubusercontent.com/u/252904306?v=4" alt="" /><span>AM</span></span><span class="brand-name">Abdelrahman<br /><em>Mostafa</em></span></a><p>Software, simulation, and systems<br />for a future still in progress.</p><div class="footer-links"><a href="https://github.com/AbdelrahmanMostafa-Eng" target="_blank" rel="noreferrer" aria-label="GitHub"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-github" /></svg></a><a href="https://www.linkedin.com/in/abbelrahmanmostafa-eng" target="_blank" rel="noreferrer" aria-label="LinkedIn"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-linkedin" /></svg></a><a href="https://www.instagram.com/abdelrahman.m.h.f.a" target="_blank" rel="noreferrer" aria-label="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-instagram" /></svg></a><a href="https://x.com/AbdElRahmanm988" target="_blank" rel="noreferrer" aria-label="X / Twitter"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-x" /></svg></a><a href="mailto:abdelrahmanmostafa.eng@outlook.com" target="_blank" rel="noreferrer" aria-label="Email"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-mail" /></svg></a></div></div>
-      <div class="footer-bottom"><span>© 2026 Abdelrahman Mostafa</span><span>Built in public · Saudi Arabia</span><a class="footer-top-link" href="#top">Back to top <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-arrow-up" /></svg></a></div>
+<footer class="site-footer section-shell">
+      <div class="footer-main">
+        <div class="footer-identity"><a class="brand" href="#home"><span class="brand-mark brand-avatar"><img src="https://avatars.githubusercontent.com/u/252904306?v=4" alt="" /></span><span class="brand-name">Abdelrahman<br /><em>Mostafa</em></span></a><p>Software, simulation, and systems<br />for a future still in progress.</p><span class="footer-signature">ABDELRAHMAN MOSTAFA / COMPUTER ENGINEERING IN PROGRESS</span></div>
+        <div class="footer-column"><span class="footer-label">EXPLORE</span><nav aria-label="Footer navigation"><a href="#work">Selected work <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-arrow-up-right" /></svg></a><a href="#systems">How I think <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-arrow-up-right" /></svg></a><a href="#path">The path <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-arrow-up-right" /></svg></a></nav></div>
+        <div class="footer-column"><span class="footer-label">CONNECT</span><div class="footer-links"><a href="https://github.com/AbdelrahmanMostafa-Eng" target="_blank" rel="noreferrer" aria-label="GitHub"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-github" /></svg><span>GitHub</span></a><a href="https://www.linkedin.com/in/abbelrahmanmostafa-eng" target="_blank" rel="noreferrer" aria-label="LinkedIn"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-linkedin" /></svg><span>LinkedIn</span></a><a href="https://www.instagram.com/abdelrahman.m.h.f.a" target="_blank" rel="noreferrer" aria-label="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-instagram" /></svg><span>Instagram</span></a><a href="https://x.com/AbdElRahmanm988" target="_blank" rel="noreferrer" aria-label="X / Twitter"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-x" /></svg><span>X / Twitter</span></a><a href="mailto:abdelrahmanmostafa.eng@outlook.com" target="_blank" rel="noreferrer" aria-label="Email"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-mail" /></svg><span>Email</span></a></div></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Abdelrahman Mostafa</span><span class="footer-location"><i></i> Saudi Arabia · Built in public</span><a class="footer-top-link" href="#top">Back to top <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-arrow-up" /></svg></a></div>
     </footer>
 
     <button class="back-to-top icon-button" type="button" aria-label="Back to top" data-back-to-top><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-arrow-up" /></svg><span class="tooltip">Back to top</span></button>

@@ -12,10 +12,10 @@ The experience includes:
 - Responsive navigation and smooth anchor scrolling.
 - A restrained cursor halo and cursor dot on fine pointers.
 - Layered, directional surface shadows that increase on hover without looking glossy.
-- A portrait avatar placed in the AM header mark instead of a large hero portrait.
+- A portrait avatar placed in the header mark without extra initials over the image.
 - A live coding typewriter that cycles through real terminal commands.
-- An interactive 3D systems map with clickable simulation, security, and data modules.
-- Hover states, magnetic buttons, 3D tilt cards, and scroll reveal motion.
+- An authored interactive engineering workbench with a telemetry plot, blueprint layers, module nodes, and clickable simulation, security, and data states.
+- Pointer-responsive surface lighting, active-section navigation, magnetic buttons, 3D tilt cards, skill hover motion, timeline lift, and scroll reveal motion.
 - An icon-only back-to-top control with a hover tooltip.
 - Icon-linked GitHub, LinkedIn, Instagram, X, and email destinations.
 - All nine public repositories represented, with featured project cards for BioEnv, FSAE Telemetry Simulator, and Vehicle Dynamics Calculator.

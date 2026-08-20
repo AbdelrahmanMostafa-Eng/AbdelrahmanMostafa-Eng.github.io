@@ -164,8 +164,38 @@
     });
   };
   systemNodes.forEach((node) => {
-    node.addEventListener('click', () => activateModule(node.dataset.systemNode));
-    node.addEventListener('mouseenter', () => activateModule(node.dataset.systemNode));
+    const activateFromNode = () => activateModule(node.dataset.systemNode);
+    node.addEventListener('click', activateFromNode);
+    node.addEventListener('mouseenter', activateFromNode);
+    node.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        activateFromNode();
+      }
+    });
   });
   if (systemNodes.length) activateModule('simulation');
+
+  const spotlightTargets = document.querySelectorAll('.project-card, .contact-card');
+  spotlightTargets.forEach((target) => {
+    target.addEventListener('pointermove', (event) => {
+      const rect = target.getBoundingClientRect();
+      target.style.setProperty('--pointer-x', `${event.clientX - rect.left}px`);
+      target.style.setProperty('--pointer-y', `${event.clientY - rect.top}px`);
+    });
+  });
+
+  const desktopNavLinks = [...document.querySelectorAll('.desktop-nav a')];
+  const navSections = desktopNavLinks
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+  if ('IntersectionObserver' in window && desktopNavLinks.length) {
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        desktopNavLinks.forEach((link) => link.classList.toggle('is-current', link.getAttribute('href') === `#${entry.target.id}`));
+      });
+    }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+    navSections.forEach((section) => navObserver.observe(section));
+  }
 })();
