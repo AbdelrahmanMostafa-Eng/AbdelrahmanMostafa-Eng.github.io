@@ -61,6 +61,29 @@
 
   if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const ambientLights = [...document.querySelectorAll('.ambient-light')];
+    const tiltSurfaces = [...document.querySelectorAll('.hero-console, .repo-card')];
+    const resetTilt = (surface) => {
+      surface.style.setProperty('--tilt-x', '0deg');
+      surface.style.setProperty('--tilt-y', '0deg');
+      surface.style.setProperty('--lift', '0px');
+      surface.style.setProperty('--mx', '50%');
+      surface.style.setProperty('--my', '50%');
+    };
+    tiltSurfaces.forEach((surface) => {
+      surface.addEventListener('pointermove', (event) => {
+        const rect = surface.getBoundingClientRect();
+        const localX = (event.clientX - rect.left) / rect.width;
+        const localY = (event.clientY - rect.top) / rect.height;
+        const tiltX = (localX - .5) * 5;
+        const tiltY = (localY - .5) * -5;
+        surface.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
+        surface.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+        surface.style.setProperty('--lift', surface.matches('.hero-console') ? '-8px' : '-4px');
+        surface.style.setProperty('--mx', `${(localX * 100).toFixed(1)}%`);
+        surface.style.setProperty('--my', `${(localY * 100).toFixed(1)}%`);
+      }, { passive: true });
+      surface.addEventListener('pointerleave', () => resetTilt(surface));
+    });
     let pointerX = window.innerWidth * .5;
     let pointerY = window.innerHeight * .35;
     let targetX = pointerX;
