@@ -46,6 +46,39 @@
   window.addEventListener('scroll', syncPageState, { passive: true });
   backTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
 
+  const scrollProgress = document.querySelector('[data-scroll-progress]');
+  const scrollTargets = new Set(document.querySelectorAll('.hero-console, .metrics .metric, .principles .principle, .tool-row, .roadmap-step, .contact'));
+  const registerScrollTarget = (target) => { if (target) { target.classList.add('scroll-depth'); scrollTargets.add(target); } };
+  const sectionTargets = [...document.querySelectorAll('.hero, .intro, .work, .toolkit, .path, .contact')];
+  scrollTargets.forEach((target) => target.classList.add('scroll-depth'));
+  let scrollMotionFrame = 0;
+  const updateScrollMotion = () => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const progress = Math.min(100, Math.max(0, (window.scrollY / maxScroll) * 100));
+    scrollProgress?.style.setProperty('--scroll-progress', `${progress}%`);
+    const viewportCenter = window.innerHeight * .52;
+    let depthIndex = 0;
+    scrollTargets.forEach((target) => {
+      const rect = target.getBoundingClientRect();
+      const distance = Math.max(-1.25, Math.min(1.25, ((rect.top + rect.height * .5) - viewportCenter) / window.innerHeight));
+      const shift = Math.round(distance * -12);
+      const depth = Math.round((1 - Math.min(1, Math.abs(distance))) * 10) + (depthIndex++ % 2);
+      target.style.setProperty('--scroll-shift', `${shift}px`);
+      target.style.setProperty('--scroll-z', `${depth}px`);
+      if (target.matches('.hero-console, .contact')) target.style.setProperty('--scroll-tilt-y', `${(distance * -1.6).toFixed(2)}deg`);
+    });
+    sectionTargets.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      const distance = Math.max(-1.5, Math.min(1.5, ((rect.top + rect.height * .35) - viewportCenter) / window.innerHeight));
+      section.style.setProperty('--section-depth', distance.toFixed(3));
+    });
+    scrollMotionFrame = 0;
+  };
+  const requestScrollMotion = () => { if (!reduceMotion && !scrollMotionFrame) scrollMotionFrame = window.requestAnimationFrame(updateScrollMotion); };
+  requestScrollMotion();
+  window.addEventListener('scroll', requestScrollMotion, { passive: true });
+  window.addEventListener('resize', requestScrollMotion, { passive: true });
+
   const closeMenu = () => {
     mobileMenu?.classList.remove('is-open');
     menuToggle?.setAttribute('aria-expanded', 'false');
@@ -264,7 +297,8 @@
       const card = repoTemplate.content.cloneNode(true).querySelector('.repo-card');
       card.dataset.repoUrl = repo.html_url;
       card.dataset.repoName = repo.name;
-      card.classList.add('is-visible', 'is-entering');
+      card.classList.add('is-visible', 'is-entering', 'scroll-depth');
+      registerScrollTarget(card);
       card.style.setProperty('--card-index', index);
       card.querySelector('.repo-number').textContent = String(index + 1).padStart(2, '0');
       card.querySelector('.repo-language').textContent = languageName(repo.language);
@@ -297,6 +331,7 @@
       if (repoCount) repoCount.textContent = String(state.repos.length).padStart(2, '0');
       if (repoStatus) repoStatus.textContent = `${state.repos.length} public repositories indexed`;
       renderRepos();
+      requestScrollMotion();
     } catch (error) {
       if (repoStatus) repoStatus.textContent = 'GitHub sync unavailable — showing the next retry state';
       if (repoGrid) repoGrid.innerHTML = '<p class="repo-empty">The repository feed could not be reached right now. Try “Sync now” again.</p>';
