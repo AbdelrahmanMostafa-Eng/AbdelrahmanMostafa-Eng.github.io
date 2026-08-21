@@ -15,7 +15,7 @@
     const light = theme === 'light';
     body.classList.toggle('theme-light', light);
     themeToggle?.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#efeee8' : '#101415');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#f2fbfd' : '#071a2b');
   };
   const storedTheme = localStorage.getItem('console-theme');
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;

@@ -4,7 +4,7 @@ Personal portfolio for **Abdelrahman Mostafa**, an aspiring computer engineer ex
 
 ## New visual direction
 
-This version is a complete rebuild with an engineering-console aesthetic: graphite surfaces, bright lime signal accents, violet system markers, monospace diagnostics, a live workbench graph, structured toolchain bars, and repository cards that feel closer to a personal lab interface than a marketing template.
+This version is a complete rebuild with an engineering-console aesthetic: deep-navy surfaces, bright cyan signal accents, blue-gray system markers, monospace diagnostics, a live workbench graph, structured toolchain bars, and repository cards that feel closer to a personal lab interface than a marketing template. The light theme uses a pale cyan background with deep-navy text, while the dark theme uses deep-navy surfaces with near-white text and cyan interaction states.
 
 ## Automatic GitHub repository feed
 
