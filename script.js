@@ -146,19 +146,22 @@
   const consoleLine = document.querySelector('[data-console-line]');
   const consolePrompt = document.querySelector('[data-console-prompt]');
   const consoleReadout = document.querySelector('[data-console-readout]');
+  const consoleReadoutLabel = document.querySelector('[data-console-readout-label]');
+  const consoleThroughput = document.querySelector('[data-console-throughput]');
   const consoleTime = document.querySelector('[data-console-time]');
+  const graphSample = document.querySelector('[data-graph-sample]');
   const signalItems = [...document.querySelectorAll('.signal')];
   const diagnostics = [
-    ['indexing public repositories...', '18ms'],
-    ['warming simulation cache...', '24ms'],
-    ['checking local trust boundary...', '12ms'],
-    ['rendering the next experiment...', '31ms'],
+    ['indexing public repositories...', '18ms', 'nominal latency', '86% throughput', 'sample 12 / 12'],
+    ['warming simulation cache...', '24ms', 'cache warm-up', '78% throughput', 'sample 09 / 12'],
+    ['checking local trust boundary...', '12ms', 'trust boundary', '92% throughput', 'sample 11 / 12'],
+    ['rendering the next experiment...', '31ms', 'render queue', '69% throughput', 'sample 07 / 12'],
   ];
   const signalDiagnostics = {
-    'repo index': ['scanning public repository graph...', '18ms'],
-    telemetry: ['replaying telemetry sample window...', '22ms'],
-    'memory safe': ['checking local trust boundary...', '12ms'],
-    'build queue': ['rendering the next experiment...', '31ms'],
+    'repo index': ['scanning public repository graph...', '18ms', 'nominal latency', '86% throughput', 'sample 12 / 12'],
+    telemetry: ['replaying telemetry sample window...', '22ms', 'telemetry pass', '81% throughput', 'sample 10 / 12'],
+    'memory safe': ['checking local trust boundary...', '12ms', 'trust boundary', '92% throughput', 'sample 11 / 12'],
+    'build queue': ['rendering the next experiment...', '31ms', 'render queue', '69% throughput', 'sample 07 / 12'],
   };
   let diagnosticIndex = 0;
   let typingTimer;
@@ -172,10 +175,13 @@
       if (index >= message.length) window.clearInterval(typingTimer);
     }, 22);
   };
-  const runDiagnostic = (selectedMessage, selectedLatency) => {
-    const [message, latency] = selectedMessage ? [selectedMessage, selectedLatency] : diagnostics[diagnosticIndex++ % diagnostics.length];
+  const runDiagnostic = (selectedMessage, selectedLatency, selectedLabel, selectedThroughput, selectedSample) => {
+    const [message, latency, label, throughput, sample] = selectedMessage ? [selectedMessage, selectedLatency, selectedLabel || 'nominal latency', selectedThroughput || '86% throughput', selectedSample || 'sample 12 / 12'] : diagnostics[diagnosticIndex++ % diagnostics.length];
     typeConsoleLine(message);
     if (consoleReadout) consoleReadout.textContent = latency;
+    if (consoleReadoutLabel) consoleReadoutLabel.textContent = label;
+    if (consoleThroughput) consoleThroughput.textContent = throughput;
+    if (graphSample) graphSample.textContent = sample;
     if (consoleTime) consoleTime.textContent = 'just now';
     if (consolePrompt) consolePrompt.textContent = '>';
   };
@@ -185,13 +191,36 @@
     signal.setAttribute('role', 'button');
     const activateSignal = () => {
       signalItems.forEach((item) => item.classList.toggle('active', item === signal));
-      const [message, latency] = signalDiagnostics[signal.textContent.trim()] || diagnostics[0];
-      runDiagnostic(message, latency);
+      const [message, latency, label, throughput, sample] = signalDiagnostics[signal.textContent.trim()] || diagnostics[0];
+      runDiagnostic(message, latency, label, throughput, sample);
     };
     signal.addEventListener('click', activateSignal);
     signal.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); activateSignal(); } });
   });
   if (!reduceMotion) window.setInterval(runDiagnostic, 4200);
+
+  if (pointerCapable) {
+    const telemetryGraph = document.querySelector('[data-telemetry-graph]');
+    const graphCrosshair = telemetryGraph?.querySelector('.graph-crosshair');
+    const graphPoint = telemetryGraph?.querySelector('.graph-point');
+    const graphPointHalo = telemetryGraph?.querySelector('.graph-point-halo');
+    const sampleYs = [226, 214, 202, 189, 196, 176, 164, 148, 138, 118, 102, 76];
+    const setGraphFocus = (progress) => {
+      const clamped = Math.max(0, Math.min(1, progress));
+      const sampleIndex = Math.max(0, Math.min(sampleYs.length - 1, Math.round(clamped * (sampleYs.length - 1))));
+      const x = 42 + clamped * 478;
+      const y = sampleYs[sampleIndex];
+      graphCrosshair?.setAttribute('x1', x.toFixed(1)); graphCrosshair?.setAttribute('x2', x.toFixed(1));
+      graphPoint?.setAttribute('cx', x.toFixed(1)); graphPoint?.setAttribute('cy', y.toFixed(1));
+      graphPointHalo?.setAttribute('cx', x.toFixed(1)); graphPointHalo?.setAttribute('cy', y.toFixed(1));
+      if (graphSample) graphSample.textContent = `sample ${String(sampleIndex + 1).padStart(2, '0')} / 12`;
+    };
+    telemetryGraph?.addEventListener('pointermove', (event) => {
+      const rect = telemetryGraph.getBoundingClientRect();
+      setGraphFocus((event.clientX - rect.left) / rect.width);
+    }, { passive: true });
+    telemetryGraph?.addEventListener('pointerleave', () => setGraphFocus(11 / 11));
+  }
 
   const repoGrid = document.querySelector('[data-repo-grid]');
   const repoStatus = document.querySelector('[data-repo-status]');
