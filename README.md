@@ -20,7 +20,7 @@ The feed includes **All work**, **Featured**, and **Recently updated** views, pl
 
 ## Included interactions
 
-The site includes light and dark themes, a live clock, a diagnostic console with rotating status messages, a pointer-responsive graph, ambient cyan/deep-navy background lighting, scroll reveal transitions, active navigation states, keyboard-accessible repository cards, a responsive mobile menu, interactive filters, sorting, hover lighting, premium perspective tilt on the hero and repository surfaces, dimensional buttons with press states, tactile toolchain and roadmap rows, a professional footer, and an icon-only back-to-top control with hover text.
+The site includes light and dark themes, a live clock, a diagnostic console with rotating and typewritten status messages, clickable and keyboard-accessible signal modules, a pointer-responsive graph, ambient cyan/deep-navy background lighting, scroll reveal transitions, active navigation states, keyboard-accessible repository cards, a corrected responsive mobile menu, interactive filters, sorting, hover lighting, premium perspective tilt on the hero and dynamically loaded repository surfaces, staggered repository entrance motion, dimensional buttons with ripple and press states, tactile toolchain and roadmap rows, a professional footer, and an icon-only back-to-top control with hover text. GitHub sync requests use an abort timeout and expose a clear retry state instead of hanging indefinitely.
 
 ## Local preview
 

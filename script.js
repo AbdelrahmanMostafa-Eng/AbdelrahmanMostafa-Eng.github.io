@@ -3,6 +3,7 @@
   const topbar = document.querySelector('.topbar');
   const themeToggle = document.querySelector('[data-theme-toggle]');
   const backTop = document.querySelector('[data-back-to-top]');
+  const interactiveControls = document.querySelectorAll('.btn, .sync-button, .console-action, .filter-tab, .theme-switch, .menu-switch');
   const menuToggle = document.querySelector('[data-menu-toggle]');
   const mobileMenu = document.querySelector('[data-mobile-menu]');
   const cursorOrb = document.querySelector('#cursor-orb');
@@ -25,6 +26,16 @@
     localStorage.setItem('console-theme', next);
     applyTheme(next);
   });
+  interactiveControls.forEach((control) => control.addEventListener('pointerdown', (event) => {
+    if (reduceMotion) return;
+    const rect = control.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'interaction-ripple';
+    ripple.style.left = `${event.clientX - rect.left}px`;
+    ripple.style.top = `${event.clientY - rect.top}px`;
+    control.appendChild(ripple);
+    window.setTimeout(() => ripple.remove(), 620);
+  }));
 
   const syncPageState = () => {
     const scrolled = window.scrollY > 20;
@@ -59,9 +70,10 @@
     revealItems.forEach((item) => revealObserver.observe(item));
   } else revealItems.forEach((item) => item.classList.add('is-visible'));
 
-  if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  const pointerCapable = !reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let attachTiltSurface = () => {};
+  if (pointerCapable) {
     const ambientLights = [...document.querySelectorAll('.ambient-light')];
-    const tiltSurfaces = [...document.querySelectorAll('.hero-console, .repo-card')];
     const resetTilt = (surface) => {
       surface.style.setProperty('--tilt-x', '0deg');
       surface.style.setProperty('--tilt-y', '0deg');
@@ -69,11 +81,13 @@
       surface.style.setProperty('--mx', '50%');
       surface.style.setProperty('--my', '50%');
     };
-    tiltSurfaces.forEach((surface) => {
+    attachTiltSurface = (surface) => {
+      if (!surface || surface.dataset.tiltBound === 'true') return;
+      surface.dataset.tiltBound = 'true';
       surface.addEventListener('pointermove', (event) => {
         const rect = surface.getBoundingClientRect();
-        const localX = (event.clientX - rect.left) / rect.width;
-        const localY = (event.clientY - rect.top) / rect.height;
+        const localX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        const localY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
         const tiltX = (localX - .5) * 5;
         const tiltY = (localY - .5) * -5;
         surface.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
@@ -83,7 +97,8 @@
         surface.style.setProperty('--my', `${(localY * 100).toFixed(1)}%`);
       }, { passive: true });
       surface.addEventListener('pointerleave', () => resetTilt(surface));
-    });
+    };
+    document.querySelectorAll('.hero-console, .repo-card').forEach(attachTiltSurface);
     let pointerX = window.innerWidth * .5;
     let pointerY = window.innerHeight * .35;
     let targetX = pointerX;
@@ -132,22 +147,50 @@
   const consolePrompt = document.querySelector('[data-console-prompt]');
   const consoleReadout = document.querySelector('[data-console-readout]');
   const consoleTime = document.querySelector('[data-console-time]');
+  const signalItems = [...document.querySelectorAll('.signal')];
   const diagnostics = [
     ['indexing public repositories...', '18ms'],
     ['warming simulation cache...', '24ms'],
     ['checking local trust boundary...', '12ms'],
     ['rendering the next experiment...', '31ms'],
   ];
+  const signalDiagnostics = {
+    'repo index': ['scanning public repository graph...', '18ms'],
+    telemetry: ['replaying telemetry sample window...', '22ms'],
+    'memory safe': ['checking local trust boundary...', '12ms'],
+    'build queue': ['rendering the next experiment...', '31ms'],
+  };
   let diagnosticIndex = 0;
-  const runDiagnostic = () => {
-    const [message, latency] = diagnostics[diagnosticIndex % diagnostics.length];
-    diagnosticIndex += 1;
-    if (consoleLine) consoleLine.textContent = message;
+  let typingTimer;
+  const typeConsoleLine = (message) => {
+    if (!consoleLine || reduceMotion) { if (consoleLine) consoleLine.textContent = message; return; }
+    window.clearInterval(typingTimer);
+    consoleLine.textContent = '';
+    let index = 0;
+    typingTimer = window.setInterval(() => {
+      consoleLine.textContent = message.slice(0, index += 1);
+      if (index >= message.length) window.clearInterval(typingTimer);
+    }, 22);
+  };
+  const runDiagnostic = (selectedMessage, selectedLatency) => {
+    const [message, latency] = selectedMessage ? [selectedMessage, selectedLatency] : diagnostics[diagnosticIndex++ % diagnostics.length];
+    typeConsoleLine(message);
     if (consoleReadout) consoleReadout.textContent = latency;
     if (consoleTime) consoleTime.textContent = 'just now';
     if (consolePrompt) consolePrompt.textContent = '>';
   };
-  document.querySelector('[data-console-action]')?.addEventListener('click', runDiagnostic);
+  document.querySelector('[data-console-action]')?.addEventListener('click', () => runDiagnostic());
+  signalItems.forEach((signal) => {
+    signal.setAttribute('tabindex', '0');
+    signal.setAttribute('role', 'button');
+    const activateSignal = () => {
+      signalItems.forEach((item) => item.classList.toggle('active', item === signal));
+      const [message, latency] = signalDiagnostics[signal.textContent.trim()] || diagnostics[0];
+      runDiagnostic(message, latency);
+    };
+    signal.addEventListener('click', activateSignal);
+    signal.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); activateSignal(); } });
+  });
   if (!reduceMotion) window.setInterval(runDiagnostic, 4200);
 
   const repoGrid = document.querySelector('[data-repo-grid]');
@@ -192,7 +235,8 @@
       const card = repoTemplate.content.cloneNode(true).querySelector('.repo-card');
       card.dataset.repoUrl = repo.html_url;
       card.dataset.repoName = repo.name;
-      card.classList.add('is-visible');
+      card.classList.add('is-visible', 'is-entering');
+      card.style.setProperty('--card-index', index);
       card.querySelector('.repo-number').textContent = String(index + 1).padStart(2, '0');
       card.querySelector('.repo-language').textContent = languageName(repo.language);
       card.querySelector('.repo-name').textContent = repo.name.replaceAll('-', ' ');
@@ -207,13 +251,17 @@
       card.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openRepo(); } });
       card.addEventListener('pointermove', (event) => { const rect = card.getBoundingClientRect(); card.style.setProperty('--mx', `${event.clientX - rect.left}px`); card.style.setProperty('--my', `${event.clientY - rect.top}px`); });
       repoGrid.appendChild(card);
+      attachTiltSurface(card);
     });
   };
   const loadRepos = async () => {
     repoRefresh?.classList.add('is-syncing');
+    repoRefresh?.setAttribute('aria-busy', 'true');
     if (repoStatus) repoStatus.textContent = 'Syncing public repositories...';
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
     try {
-      const response = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=updated`, { headers: { Accept: 'application/vnd.github+json' } });
+      const response = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=updated`, { headers: { Accept: 'application/vnd.github+json' }, signal: controller.signal });
       if (!response.ok) throw new Error(`GitHub responded ${response.status}`);
       const data = await response.json();
       state.repos = data.filter((repo) => !repo.fork).map(prepareRepo);
@@ -224,7 +272,11 @@
       if (repoStatus) repoStatus.textContent = 'GitHub sync unavailable — showing the next retry state';
       if (repoGrid) repoGrid.innerHTML = '<p class="repo-empty">The repository feed could not be reached right now. Try “Sync now” again.</p>';
       console.warn(error);
-    } finally { repoRefresh?.classList.remove('is-syncing'); }
+    } finally {
+      window.clearTimeout(timeout);
+      repoRefresh?.classList.remove('is-syncing');
+      repoRefresh?.setAttribute('aria-busy', 'false');
+    }
   };
   repoRefresh?.addEventListener('click', loadRepos);
   repoSort?.addEventListener('change', (event) => { state.sort = event.target.value; renderRepos(); });
