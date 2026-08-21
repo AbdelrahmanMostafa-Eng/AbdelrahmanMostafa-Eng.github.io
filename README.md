@@ -1,40 +1,39 @@
-# AbdelrahmanMostafa-Eng.github.io
+# Abdelrahman Mostafa — Engineering in public
 
 Personal portfolio for **Abdelrahman Mostafa**, an aspiring computer engineer exploring software, simulation, data, security tooling, and systems design.
 
-## Design direction
+## New visual direction
 
-The site combines a human editorial voice with software-engineering details: warm paper surfaces, deep ink typography, coral and indigo status accents, a measured grid, and a calm dark theme. `DM Serif Display` gives the main statements a memorable, personal voice while `Manrope` keeps the interface warm and direct; `IBM Plex Mono` is reserved for code, system readouts, and technical metadata.
+This version is a complete rebuild with an engineering-console aesthetic: graphite surfaces, bright lime signal accents, violet system markers, monospace diagnostics, a live workbench graph, structured toolchain bars, and repository cards that feel closer to a personal lab interface than a marketing template.
 
-The experience includes:
+## Automatic GitHub repository feed
 
-- A light/dark theme toggle with localStorage persistence.
-- Responsive navigation and smooth anchor scrolling.
-- A restrained cursor halo and cursor dot on fine pointers.
-- Layered, directional surface shadows that increase on hover without looking glossy.
-- A portrait avatar placed in the header mark without extra initials over the image.
-- A live coding typewriter that cycles through real terminal commands.
-- An authored interactive engineering workbench with a telemetry plot, blueprint layers, module nodes, and clickable simulation, security, and data states.
-- Pointer-responsive surface lighting, active-section navigation, magnetic buttons, 3D tilt cards, skill hover motion, timeline lift, and scroll reveal motion.
-- An icon-only back-to-top control with a hover tooltip.
-- Icon-linked GitHub, LinkedIn, Instagram, X, and email destinations.
-- All nine public repositories represented, with featured project cards for BioEnv, FSAE Telemetry Simulator, and Vehicle Dynamics Calculator.
-- A reduced-motion path that disables non-essential movement for accessibility.
+The public work section is now generated at runtime from the GitHub REST API endpoint for `AbdelrahmanMostafa-Eng`:
+
+```text
+https://api.github.com/users/AbdelrahmanMostafa-Eng/repos?per_page=100&sort=updated
+```
+
+The browser filters out forked repositories, sorts the remaining public repositories, and creates the cards from an HTML `<template>`. This means that when a new public repository is created under the account, it can appear automatically the next time someone visits the portfolio or presses **Sync now**. No manual HTML edit is needed.
+
+The feed includes **All work**, **Featured**, and **Recently updated** views, plus sorting by updated date, stars, or repository name. If GitHub is temporarily unavailable or its public API rate limit is reached, the interface shows a clear retry state rather than inventing repository data.
+
+## Included interactions
+
+The site includes light and dark themes, a live clock, a diagnostic console with rotating status messages, a pointer-responsive graph, scroll reveal transitions, active navigation states, keyboard-accessible repository cards, a responsive mobile menu, interactive filters, sorting, hover lighting, toolchain progress bars, a professional footer, and an icon-only back-to-top control with hover text.
 
 ## Local preview
 
-This is a dependency-free static site. From the repository root, run:
+From the repository root, serve the static files with any local server. For example:
 
 ```bash
 python3 -m http.server 4173
 ```
 
-Then open <http://localhost:4173> in a browser.
+Then open `http://127.0.0.1:4173` in a browser.
 
 ## GitHub Pages
 
-The repository is named `AbdelrahmanMostafa-Eng.github.io`, so GitHub Pages can serve the root of the `main` branch at:
+The repository is configured for a static GitHub Pages deployment from the `main` branch. `.nojekyll` is included so the custom static entrypoint is served directly.
 
-<https://abdelrahmanmostafa-eng.github.io>
-
-Enable Pages in the repository settings with **Deploy from a branch**, selecting `main` and the `/ (root)` folder.
+The runtime repository feed is intentionally public-data-only and requires no API token, backend, database, scheduled job, or secret configuration.
