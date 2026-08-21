@@ -60,11 +60,34 @@
   } else revealItems.forEach((item) => item.classList.add('is-visible'));
 
   if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const ambientLights = [...document.querySelectorAll('.ambient-light')];
+    let pointerX = window.innerWidth * .5;
+    let pointerY = window.innerHeight * .35;
+    let targetX = pointerX;
+    let targetY = pointerY;
+    let frame = 0;
+    const updateAmbientLights = () => {
+      pointerX += (targetX - pointerX) * .055;
+      pointerY += (targetY - pointerY) * .055;
+      const x = (pointerX / window.innerWidth - .5) * 2;
+      const y = (pointerY / window.innerHeight - .5) * 2;
+      ambientLights.forEach((light, index) => {
+        const strength = [22, -13, 16][index] || 14;
+        const vertical = [15, 19, -14][index] || 12;
+        light.style.setProperty('--light-x', `${x * strength}px`);
+        light.style.setProperty('--light-y', `${y * vertical}px`);
+      });
+      frame = window.requestAnimationFrame(updateAmbientLights);
+    };
     window.addEventListener('pointermove', (event) => {
+      targetX = event.clientX;
+      targetY = event.clientY;
       cursorOrb?.classList.add('is-visible');
       cursorOrb?.animate({ transform: `translate3d(${event.clientX}px, ${event.clientY}px, 0)` }, { duration: 420, fill: 'forwards', easing: 'cubic-bezier(.22,1,.36,1)' });
     }, { passive: true });
     document.addEventListener('mouseleave', () => cursorOrb?.classList.remove('is-visible'));
+    window.addEventListener('pagehide', () => window.cancelAnimationFrame(frame), { once: true });
+    updateAmbientLights();
   }
 
   const navLinks = [...document.querySelectorAll('.nav-links a')];
