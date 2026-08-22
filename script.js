@@ -9,6 +9,7 @@
   const cursorOrb = document.querySelector('#cursor-orb');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const GITHUB_USER = 'AbdelrahmanMostafa-Eng';
+  const REPO_CACHE_KEY = 'abdelrahman-public-repos-v1';
   const FEATURED = new Set(['bioenv', 'fsae-telemetry-simulator', 'vehicle-dynamics-calculator']);
   const state = { repos: [], filter: 'all', sort: 'updated' };
 
@@ -183,6 +184,7 @@
   const consoleThroughput = document.querySelector('[data-console-throughput]');
   const consoleTime = document.querySelector('[data-console-time]');
   const graphSample = document.querySelector('[data-graph-sample]');
+  let updateTelemetryFocus = () => {};
   const signalItems = [...document.querySelectorAll('.signal')];
   const diagnostics = [
     ['indexing public repositories...', '18ms', 'nominal latency', '86% throughput', 'sample 12 / 12'],
@@ -215,6 +217,8 @@
     if (consoleReadoutLabel) consoleReadoutLabel.textContent = label;
     if (consoleThroughput) consoleThroughput.textContent = throughput;
     if (graphSample) graphSample.textContent = sample;
+    const sampleMatch = String(sample).match(/(\d+)\s*\/\s*12/);
+    if (sampleMatch) updateTelemetryFocus(Number(sampleMatch[1]) - 1);
     if (consoleTime) consoleTime.textContent = 'just now';
     if (consolePrompt) consolePrompt.textContent = '>';
   };
@@ -232,27 +236,104 @@
   });
   if (!reduceMotion) window.setInterval(runDiagnostic, 4200);
 
-  if (pointerCapable) {
-    const telemetryGraph = document.querySelector('[data-telemetry-graph]');
-    const graphCrosshair = telemetryGraph?.querySelector('.graph-crosshair');
-    const graphPoint = telemetryGraph?.querySelector('.graph-point');
-    const graphPointHalo = telemetryGraph?.querySelector('.graph-point-halo');
-    const sampleYs = [226, 214, 202, 189, 196, 176, 164, 148, 138, 118, 102, 76];
-    const setGraphFocus = (progress) => {
-      const clamped = Math.max(0, Math.min(1, progress));
-      const sampleIndex = Math.max(0, Math.min(sampleYs.length - 1, Math.round(clamped * (sampleYs.length - 1))));
-      const x = 42 + clamped * 478;
-      const y = sampleYs[sampleIndex];
-      graphCrosshair?.setAttribute('x1', x.toFixed(1)); graphCrosshair?.setAttribute('x2', x.toFixed(1));
-      graphPoint?.setAttribute('cx', x.toFixed(1)); graphPoint?.setAttribute('cy', y.toFixed(1));
-      graphPointHalo?.setAttribute('cx', x.toFixed(1)); graphPointHalo?.setAttribute('cy', y.toFixed(1));
-      if (graphSample) graphSample.textContent = `sample ${String(sampleIndex + 1).padStart(2, '0')} / 12`;
+  const telemetryGraph = document.querySelector('[data-telemetry-graph]');
+  const graphSvg = telemetryGraph?.querySelector('[data-telemetry-canvas]');
+  const sampleValues = [42, 48, 55, 51, 63, 70, 66, 78, 75, 88, 84, 94];
+  const sampleVolumes = [34, 44, 38, 58, 51, 68, 57, 74, 64, 82, 71, 90];
+  const graphPoints = sampleValues.map((value, index) => ({
+    x: 48 + index * 47.5,
+    y: 278 - value * 2.05,
+    z: 10 + (index % 3) * 5,
+    value,
+    volume: sampleVolumes[index],
+  }));
+  const graphProject = ({ x, y, z = 0 }) => ({ x: x + z * .72, y: y - z * .46 });
+  const graphPointString = (points) => points.map((point) => {
+    const projected = graphProject(point);
+    return `${projected.x.toFixed(1)},${projected.y.toFixed(1)}`;
+  }).join(' ');
+  const makeSvgElement = (tag, attributes = {}) => {
+    const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+    return element;
+  };
+  const drawTelemetryGraph = () => {
+    if (!graphSvg) return;
+    graphSvg.innerHTML = '';
+    const defs = makeSvgElement('defs');
+    const areaGradient = makeSvgElement('linearGradient', { id: 'graph-3d-area', x1: '0', x2: '0', y1: '0', y2: '1' });
+    [['0', '.28'], ['.65', '.08'], ['1', '0']].forEach(([offset, opacity]) => areaGradient.appendChild(makeSvgElement('stop', { offset, 'stop-color': 'var(--cyan)', 'stop-opacity': opacity })));
+    const graphGlow = makeSvgElement('filter', { id: 'graph-3d-glow', x: '-30%', y: '-30%', width: '160%', height: '160%' });
+    graphGlow.appendChild(makeSvgElement('feGaussianBlur', { stdDeviation: '3', result: 'blur' }));
+    const merge = makeSvgElement('feMerge');
+    merge.appendChild(makeSvgElement('feMergeNode', { in: 'blur' }));
+    merge.appendChild(makeSvgElement('feMergeNode', { in: 'SourceGraphic' }));
+    graphGlow.appendChild(merge);
+    defs.append(areaGradient, graphGlow);
+    graphSvg.appendChild(defs);
+    const backPlane = makeSvgElement('polygon', { class: 'graph-3d-plane graph-3d-plane-back', points: graphPointString([{ x: 48, y: 36, z: 46 }, { x: 570, y: 36, z: 46 }, { x: 570, y: 278, z: 46 }, { x: 48, y: 278, z: 46 }]) });
+    graphSvg.appendChild(backPlane);
+    [0, 25, 50, 75, 100].forEach((value) => {
+      const y = 278 - value * 2.05;
+      const start = graphProject({ x: 48, y, z: 0 });
+      const end = graphProject({ x: 570, y, z: 0 });
+      const depthEnd = graphProject({ x: 570, y, z: 46 });
+      graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-grid', x1: start.x, y1: start.y, x2: end.x, y2: end.y }));
+      graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-grid graph-3d-grid-depth', x1: end.x, y1: end.y, x2: depthEnd.x, y2: depthEnd.y }));
+    });
+    [0, 2, 4, 6, 8, 10, 12].forEach((seconds, index) => {
+      const x = 48 + index * (522 / 6);
+      const front = graphProject({ x, y: 278, z: 0 });
+      const back = graphProject({ x, y: 278, z: 46 });
+      graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-grid graph-3d-grid-vertical', x1: front.x, y1: 36, x2: front.x, y2: front.y }));
+      graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-grid graph-3d-grid-depth', x1: front.x, y1: front.y, x2: back.x, y2: back.y }));
+    });
+    const threshold = graphProject({ x: 48, y: 278 - 72 * 2.05, z: 0 });
+    const thresholdEnd = graphProject({ x: 570, y: 278 - 72 * 2.05, z: 0 });
+    graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-threshold', x1: threshold.x, y1: threshold.y, x2: thresholdEnd.x, y2: thresholdEnd.y }));
+    graphPoints.forEach((point, index) => {
+      const front = graphProject(point);
+      const back = graphProject({ ...point, z: point.z + 24 });
+      const base = graphProject({ x: point.x, y: 278, z: point.z });
+      const volume = Math.max(7, point.volume * .55);
+      const volumeBase = graphProject({ x: point.x, y: 278, z: point.z + 24 });
+      const barTop = graphProject({ x: point.x, y: 278 - volume, z: point.z });
+      const barTopBack = graphProject({ x: point.x, y: 278 - volume, z: point.z + 24 });
+      graphSvg.appendChild(makeSvgElement('polygon', { class: 'graph-3d-bar-side', points: `${barTop.x},${barTop.y} ${barTopBack.x},${barTopBack.y} ${volumeBase.x},${volumeBase.y} ${base.x},${base.y}` }));
+      graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-bar', x1: base.x, y1: base.y, x2: front.x, y2: front.y, 'data-sample-index': index }));
+      graphSvg.appendChild(makeSvgElement('line', { class: 'graph-3d-bar-depth', x1: front.x, y1: front.y, x2: back.x, y2: back.y }));
+    });
+    const projectedPoints = graphPoints.map(graphProject);
+    const areaPoints = `${graphPointString(graphPoints)} ${graphProject({ x: 570, y: 278, z: 0 }).x},${graphProject({ x: 570, y: 278, z: 0 }).y} ${graphProject({ x: 48, y: 278, z: 0 }).x},${graphProject({ x: 48, y: 278, z: 0 }).y}`;
+    graphSvg.appendChild(makeSvgElement('polygon', { class: 'graph-3d-area', points: areaPoints }));
+    graphSvg.appendChild(makeSvgElement('polyline', { class: 'graph-3d-trace-shadow', points: graphPointString(graphPoints.map((point) => ({ ...point, y: point.y + 7, z: 0 }))) }));
+    graphSvg.appendChild(makeSvgElement('polyline', { class: 'graph-3d-trace', points: graphPointString(graphPoints) }));
+    const focusGroup = makeSvgElement('g', { class: 'graph-3d-focus' });
+    focusGroup.append(makeSvgElement('line', { class: 'graph-3d-focus-line', x1: projectedPoints.at(-1).x, y1: 36, x2: projectedPoints.at(-1).x, y2: 278 }), makeSvgElement('circle', { class: 'graph-3d-focus-halo', cx: projectedPoints.at(-1).x, cy: projectedPoints.at(-1).y, r: '12' }), makeSvgElement('circle', { class: 'graph-3d-focus-point', cx: projectedPoints.at(-1).x, cy: projectedPoints.at(-1).y, r: '5' }));
+    graphSvg.appendChild(focusGroup);
+    graphSvg.appendChild(makeSvgElement('polyline', { class: 'graph-3d-axis', points: graphPointString([{ x: 48, y: 278, z: 0 }, { x: 570, y: 278, z: 0 }, { x: 570, y: 278, z: 46 }]) }));
+    updateTelemetryFocus = (sampleIndex) => {
+      const index = Math.max(0, Math.min(graphPoints.length - 1, Number(sampleIndex) || 0));
+      const point = graphProject(graphPoints[index]);
+      const focusLine = graphSvg.querySelector('.graph-3d-focus-line');
+      const focusPoint = graphSvg.querySelector('.graph-3d-focus-point');
+      const focusHalo = graphSvg.querySelector('.graph-3d-focus-halo');
+      focusLine?.setAttribute('x1', point.x.toFixed(1)); focusLine?.setAttribute('x2', point.x.toFixed(1));
+      focusPoint?.setAttribute('cx', point.x.toFixed(1)); focusPoint?.setAttribute('cy', point.y.toFixed(1));
+      focusHalo?.setAttribute('cx', point.x.toFixed(1)); focusHalo?.setAttribute('cy', point.y.toFixed(1));
+      graphSvg.querySelectorAll('[data-sample-index]').forEach((bar) => bar.classList.toggle('is-focused', Number(bar.dataset.sampleIndex) === index));
+      if (graphSample) graphSample.textContent = `sample ${String(index + 1).padStart(2, '0')} / 12`;
     };
+    updateTelemetryFocus(graphPoints.length - 1);
+  };
+  drawTelemetryGraph();
+  if (pointerCapable) {
     telemetryGraph?.addEventListener('pointermove', (event) => {
       const rect = telemetryGraph.getBoundingClientRect();
-      setGraphFocus((event.clientX - rect.left) / rect.width);
+      const progress = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      updateTelemetryFocus(Math.round(progress * (graphPoints.length - 1)));
     }, { passive: true });
-    telemetryGraph?.addEventListener('pointerleave', () => setGraphFocus(11 / 11));
+    telemetryGraph?.addEventListener('pointerleave', () => updateTelemetryFocus(graphPoints.length - 1));
   }
 
   const repoGrid = document.querySelector('[data-repo-grid]');
@@ -317,6 +398,27 @@
       attachTiltSurface(card);
     });
   };
+  const readRepoCache = () => {
+    try {
+      const cached = JSON.parse(localStorage.getItem(REPO_CACHE_KEY) || '[]');
+      return Array.isArray(cached) ? cached.filter((repo) => repo && repo.html_url && repo.name).map(prepareRepo) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+  const writeRepoCache = (repos) => {
+    try { localStorage.setItem(REPO_CACHE_KEY, JSON.stringify(repos)); } catch (error) { /* Storage can be unavailable in privacy mode. */ }
+  };
+  const renderCachedRepos = () => {
+    const cached = readRepoCache();
+    if (!cached.length) return false;
+    state.repos = cached;
+    if (repoCount) repoCount.textContent = String(cached.length).padStart(2, '0');
+    if (repoStatus) repoStatus.textContent = `${cached.length} cached public repositories`;
+    renderRepos();
+    requestScrollMotion();
+    return true;
+  };
   const loadRepos = async () => {
     repoRefresh?.classList.add('is-syncing');
     repoRefresh?.setAttribute('aria-busy', 'true');
@@ -328,14 +430,23 @@
       if (!response.ok) throw new Error(`GitHub responded ${response.status}`);
       const data = await response.json();
       state.repos = data.filter((repo) => !repo.fork).map(prepareRepo);
+      writeRepoCache(state.repos);
       if (repoCount) repoCount.textContent = String(state.repos.length).padStart(2, '0');
       if (repoStatus) repoStatus.textContent = `${state.repos.length} public repositories indexed`;
       renderRepos();
       requestScrollMotion();
     } catch (error) {
-      if (repoStatus) repoStatus.textContent = 'GitHub sync unavailable — showing the next retry state';
-      if (repoGrid) repoGrid.innerHTML = '<p class="repo-empty">The repository feed could not be reached right now. Try “Sync now” again.</p>';
-      console.warn(error);
+      const cached = renderCachedRepos();
+      if (cached && error instanceof Error && error.message.includes('403')) {
+        if (repoStatus) repoStatus.textContent = `${state.repos.length} cached repositories · GitHub sync rate-limited`;
+        console.info('GitHub public API rate limit reached; showing the last successful repository snapshot.');
+      } else if (cached) {
+        if (repoStatus) repoStatus.textContent = `${state.repos.length} cached repositories · live sync retry available`;
+      } else {
+        if (repoStatus) repoStatus.textContent = 'GitHub sync unavailable — showing the next retry state';
+        if (repoGrid) repoGrid.innerHTML = '<p class="repo-empty">The repository feed could not be reached right now. Try “Sync now” again.</p>';
+        console.info('GitHub repository feed unavailable; use Sync now to retry.', error);
+      }
     } finally {
       window.clearTimeout(timeout);
       repoRefresh?.classList.remove('is-syncing');
@@ -349,5 +460,6 @@
     filterTabs.forEach((button) => { const active = button === tab; button.classList.toggle('is-active', active); button.setAttribute('aria-selected', String(active)); });
     renderRepos();
   }));
+  renderCachedRepos();
   loadRepos();
 })();

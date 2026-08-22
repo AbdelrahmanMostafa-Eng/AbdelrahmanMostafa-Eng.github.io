@@ -209,3 +209,62 @@ body.theme-light { --ambient-cyan: #60A5FA; --ambient-violet: #A78BFA; --ambient
 .ambient-light-cyan { background: radial-gradient(circle, color-mix(in srgb, var(--ambient-cyan) 44%, transparent) 0%, color-mix(in srgb, var(--ambient-cyan) 10%, transparent) 38%, transparent 74%); }
 .ambient-light-navy { background: radial-gradient(circle, color-mix(in srgb, var(--ambient-violet) 34%, transparent) 0%, color-mix(in srgb, var(--ambient-violet) 8%, transparent) 42%, transparent 76%); }
 .ambient-light-soft { background: radial-gradient(circle, color-mix(in srgb, var(--ambient-sky) 32%, transparent) 0%, color-mix(in srgb, var(--ambient-sky) 7%, transparent) 42%, transparent 76%); }
+
+
+/* 3D telemetry field */
+.console-graph { isolation: isolate; perspective: 1200px; background: radial-gradient(circle at 68% 44%, color-mix(in srgb, var(--cyan) 11%, transparent), transparent 48%), linear-gradient(145deg, color-mix(in srgb, var(--panel) 82%, transparent), color-mix(in srgb, var(--panel-2) 58%, transparent)); }
+.graph-3d-stage { position: relative; z-index: 1; min-height: 292px; transform: perspective(1100px) rotateX(2deg) rotateY(-2deg) translateZ(0); transform-style: preserve-3d; transition: transform .4s var(--ease), filter .4s ease; }
+.console-graph:hover .graph-3d-stage { transform: perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(-3px) translateZ(10px); filter: drop-shadow(0 16px 20px color-mix(in srgb, var(--deep-navy) 16%, transparent)); }
+.graph-3d-svg { display: block; width: 100%; height: 100%; min-height: 292px; overflow: visible; color: var(--cyan); }
+.graph-3d-plane-back { fill: color-mix(in srgb, var(--panel-2) 60%, transparent); stroke: var(--line); stroke-width: 1; opacity: .82; }
+.graph-3d-grid { fill: none; stroke: color-mix(in srgb, var(--line-strong) 68%, transparent); stroke-width: 1; stroke-dasharray: 2 5; opacity: .72; }
+.graph-3d-grid-depth { stroke: color-mix(in srgb, var(--cyan) 25%, var(--line)); stroke-dasharray: 3 5; opacity: .62; }
+.graph-3d-grid-vertical { opacity: .42; }
+.graph-3d-axis { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+.graph-3d-threshold { fill: none; stroke: var(--violet); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .78; }
+.graph-3d-bar-side { fill: color-mix(in srgb, var(--violet) 18%, transparent); stroke: color-mix(in srgb, var(--violet) 32%, var(--line)); stroke-width: 1; opacity: .82; transition: opacity .2s ease, fill .2s ease; }
+.graph-3d-bar { stroke: color-mix(in srgb, var(--cyan) 72%, var(--line)); stroke-width: 3.5; stroke-linecap: round; opacity: .42; transition: opacity .2s ease, stroke .2s ease, stroke-width .2s ease, filter .2s ease; }
+.graph-3d-bar-depth { stroke: color-mix(in srgb, var(--cyan) 40%, var(--line)); stroke-width: 2.4; stroke-linecap: round; opacity: .35; }
+.graph-3d-bar.is-focused { stroke: var(--cyan); stroke-width: 5; opacity: 1; filter: url(#graph-3d-glow); }
+.graph-3d-bar.is-focused + .graph-3d-bar-depth { stroke: var(--cyan); opacity: .76; }
+.graph-3d-area { fill: url(#graph-3d-area); stroke: none; opacity: .72; }
+.graph-3d-trace, .graph-3d-trace-shadow { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.graph-3d-trace { stroke: var(--cyan); stroke-width: 3.4; filter: url(#graph-3d-glow); stroke-dasharray: 9 5; animation: signal-dash 7s linear infinite; }
+.graph-3d-trace-shadow { stroke: color-mix(in srgb, var(--cyan) 38%, transparent); stroke-width: 5; opacity: .38; filter: blur(2px); }
+.graph-3d-focus-line { stroke: var(--cyan); stroke-width: 1; stroke-dasharray: 3 5; opacity: .65; }
+.graph-3d-focus-point { fill: var(--cyan); stroke: var(--panel); stroke-width: 3; filter: url(#graph-3d-glow); animation: point-blink 2.4s ease-in-out infinite; }
+.graph-3d-focus-halo { fill: none; stroke: var(--cyan); stroke-width: 1.2; opacity: .72; animation: point-halo 2.4s ease-out infinite; }
+.graph-3d-labels { top: 33px; bottom: 37px; left: 6px; z-index: 3; color: var(--faint); }
+.graph-3d-labels span { line-height: 1; }
+.graph-3d-depth-label { position: absolute; z-index: 2; color: var(--faint); font-family: var(--mono); font-size: 6px; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; }
+.graph-3d-depth-label-a { top: 13%; left: 2%; transform: rotate(-90deg) translateX(-100%); transform-origin: left top; }
+.graph-3d-depth-label-b { right: 10%; bottom: 3%; color: var(--cyan); }
+.graph-3d-axis-labels { position: relative; z-index: 3; display: flex; justify-content: space-between; margin: -2px 28px 0 42px; color: var(--faint); font-family: var(--mono); font-size: 7px; }
+.legend-volume { height: 6px !important; width: 6px !important; border-radius: 1px; background: var(--violet); opacity: .8; }
+
+/* Deeper but restrained engineering atmosphere */
+body::before { opacity: .2; background-image: linear-gradient(color-mix(in srgb, var(--cyan) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--cyan) 8%, transparent) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, black 0%, transparent 75%); }
+body::after { background: radial-gradient(circle at 82% 7%, color-mix(in srgb, var(--ambient-cyan) 12%, transparent), transparent 29%), radial-gradient(circle at 10% 40%, color-mix(in srgb, var(--ambient-violet) 9%, transparent), transparent 32%), radial-gradient(circle at 52% 86%, color-mix(in srgb, var(--ambient-sky) 7%, transparent), transparent 34%); }
+.ambient-lights::before { content: ""; position: absolute; inset: -18%; z-index: -1; pointer-events: none; background: conic-gradient(from 210deg at 70% 18%, color-mix(in srgb, var(--ambient-cyan) 8%, transparent), transparent 20%, color-mix(in srgb, var(--ambient-violet) 7%, transparent) 43%, transparent 67%, color-mix(in srgb, var(--ambient-sky) 7%, transparent)); filter: blur(80px); opacity: .82; transform: translate3d(calc(var(--light-x, 0px) * .24), calc(var(--light-y, 0px) * .24), 0); transition: transform 1.4s var(--ease); }
+.ambient-lights::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(115deg, transparent 0 86px, color-mix(in srgb, var(--cyan) 5%, transparent) 87px, transparent 88px 172px); opacity: .34; mix-blend-mode: soft-light; animation: ambient-scan 26s linear infinite; }
+.hero-console::before { background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 40%), color-mix(in srgb, var(--cyan) 18%, transparent), transparent 72%), linear-gradient(135deg, transparent 36%, color-mix(in srgb, var(--cyan) 4%, transparent) 50%, transparent 64%); }
+.hero-console:hover::after { opacity: .95; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--cyan) 62%, transparent), transparent); }
+@keyframes ambient-scan { from { transform: translate3d(-4%, -2%, 0); } to { transform: translate3d(4%, 2%, 0); } }
+
+/* Branded external-link icons */
+.social-icon { flex: 0 0 auto; width: 16px !important; height: 16px !important; color: var(--cyan); transition: color .2s ease, transform .25s var(--ease), filter .25s ease; }
+.social-icon-github { color: var(--cyan); }
+.social-icon-linkedin { color: var(--violet); }
+.social-icon-mail { color: var(--orange); }
+.btn-quiet:hover .social-icon, .footer-column a:hover .social-icon { transform: scale(1.12) rotate(-4deg); filter: drop-shadow(0 4px 8px color-mix(in srgb, currentColor 28%, transparent)); }
+.footer-column a .social-icon { width: 15px !important; height: 15px !important; }
+.footer-column a:hover .social-icon-github { color: var(--cyan); }
+.footer-column a:hover .social-icon-linkedin { color: var(--violet); }
+.footer-column a:hover .social-icon-mail { color: var(--orange); }
+
+@media (max-width: 620px) { .graph-3d-stage, .graph-3d-svg { min-height: 248px; }.graph-3d-axis-labels { margin-inline: 30px 15px; }.graph-3d-depth-label { display: none; } }
+@media (prefers-reduced-motion: reduce) { .graph-3d-stage { transform: none; }.graph-3d-trace, .graph-3d-focus-point, .graph-3d-focus-halo, .ambient-lights::after { animation: none; }.console-graph:hover .graph-3d-stage { transform: none; filter: none; } }
+
+
+/* Correct 3D chart scale layout */
+.graph-3d-labels { position: absolute; display: grid; align-content: space-between; justify-content: start; width: 21px; }
