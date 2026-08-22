@@ -3,7 +3,7 @@
   const topbar = document.querySelector('.topbar');
   const themeToggle = document.querySelector('[data-theme-toggle]');
   const backTop = document.querySelector('[data-back-to-top]');
-  const interactiveControls = document.querySelectorAll('.btn, .sync-button, .console-action, .filter-tab, .theme-switch, .menu-switch');
+  const interactiveControls = document.querySelectorAll('.btn, .sync-button, .console-action, .filter-tab, .theme-switch, .menu-switch, .assistant-launch, .assistant-close, .assistant-suggestions button, .assistant-form button');
   const menuToggle = document.querySelector('[data-menu-toggle]');
   const mobileMenu = document.querySelector('[data-mobile-menu]');
   const cursorOrb = document.querySelector('#cursor-orb');
@@ -461,4 +461,74 @@
   }));
   renderCachedRepos();
   loadRepos();
+
+  const assistantLaunch = document.querySelector('[data-assistant-launch]');
+  const assistantPanel = document.querySelector('[data-assistant-panel]');
+  const assistantClose = document.querySelector('[data-assistant-close]');
+  const assistantMessages = document.querySelector('[data-assistant-messages]');
+  const assistantForm = document.querySelector('[data-assistant-form]');
+  const assistantInput = document.querySelector('[data-assistant-input]');
+  const assistantSuggestions = [...document.querySelectorAll('[data-assistant-prompt]')];
+  const assistantLinks = {
+    work: '#work',
+    path: '#path',
+    github: `https://github.com/${GITHUB_USER}`,
+    email: 'mailto:abdelrahmanmostafa.eng@outlook.com',
+  };
+  const addAssistantMessage = (message, role = 'bot') => {
+    if (!assistantMessages) return;
+    const bubble = document.createElement('div');
+    bubble.className = `assistant-message ${role}`;
+    bubble.textContent = message;
+    assistantMessages.appendChild(bubble);
+    assistantMessages.scrollTop = assistantMessages.scrollHeight;
+  };
+  const getProjectNames = () => {
+    const names = state.repos.slice(0, 5).map((repo) => repo.name.replaceAll('-', ' '));
+    return names.length ? names.join(', ') : 'the public repositories listed in the work section';
+  };
+  const answerAssistant = (question) => {
+    const query = question.toLowerCase().trim();
+    if (!query) return 'Ask me about projects, the toolchain, how he thinks, the roadmap, or how to get in touch.';
+    if (/\b(hello|hi|hey|help|start)\b/.test(query)) return 'I can guide you through Abdelrahman’s projects, engineering interests, toolchain, roadmap, or contact links.';
+    if (/\b(project|projects|built|build|work|repo|repository|repositories|github)\b/.test(query)) return `The portfolio is built around inspectable experiments. Current examples include ${getProjectNames()}. New public GitHub repositories appear automatically in the work section.`;
+    if (/\b(skill|skills|learn|learning|tool|tools|stack|language|python|rust|javascript|simulation|data)\b/.test(query)) return 'The current toolchain focuses on Python, Rust, JavaScript, simulation, data analysis, and Git/GitHub, with C++, embedded systems, telemetry, full-stack apps, and AI/ML fundamentals in exploration.';
+    if (/\b(think|principle|approach|method|mindset|curious|debug)\b/.test(query)) return 'The working principles are: measure first, keep it local, and ship the proof. The goal is to make invisible systems legible with practical, inspectable code.';
+    if (/\b(path|roadmap|future|goal|auc|university|computer engineering|next)\b/.test(query)) return 'The roadmap is to make the work visible now, start Computer Engineering at AUC next, go deeper into embedded systems, AI, research, and competitive programming, then build systems at scale.';
+    if (/\b(contact|email|talk|linkedin|connect|hire|reach)\b/.test(query)) return 'The best way to start a conversation is through the email link in the Open Channel section. GitHub and LinkedIn links are also available in the footer.';
+    if (/\b(who|about|location|saudi|student|grade|gpa|sat)\b/.test(query)) return 'Abdelrahman is a Grade 11 student in Saudi Arabia building toward Computer Engineering at AUC, with a 4.0 GPA and a 1530 SAT superscore.';
+    return 'I can answer questions about the public projects, engineering interests, toolchain, principles, roadmap, or contact links. Try one of the suggested prompts below.';
+  };
+  const openAssistant = () => {
+    assistantPanel?.classList.add('is-open');
+    assistantPanel?.setAttribute('aria-hidden', 'false');
+    assistantLaunch?.setAttribute('aria-expanded', 'true');
+    window.setTimeout(() => assistantInput?.focus(), 40);
+  };
+  const closeAssistant = () => {
+    assistantPanel?.classList.remove('is-open');
+    assistantPanel?.setAttribute('aria-hidden', 'true');
+    assistantLaunch?.setAttribute('aria-expanded', 'false');
+  };
+  assistantLaunch?.addEventListener('click', () => assistantPanel?.classList.contains('is-open') ? closeAssistant() : openAssistant());
+  assistantClose?.addEventListener('click', closeAssistant);
+  assistantSuggestions.forEach((button) => button.addEventListener('click', () => {
+    const prompt = button.dataset.assistantPrompt || '';
+    openAssistant();
+    addAssistantMessage(prompt, 'user');
+    window.setTimeout(() => addAssistantMessage(answerAssistant(prompt)), reduceMotion ? 0 : 180);
+  }));
+  assistantForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const question = assistantInput?.value.trim() || '';
+    if (!question) return;
+    addAssistantMessage(question, 'user');
+    if (assistantInput) assistantInput.value = '';
+    window.setTimeout(() => addAssistantMessage(answerAssistant(question)), reduceMotion ? 0 : 180);
+  });
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openAssistant(); }
+    if (event.key === 'Escape' && assistantPanel?.classList.contains('is-open')) closeAssistant();
+  });
+  addAssistantMessage('I’m the local guide. Ask about the work, the toolchain, or the path ahead.');
 })();
