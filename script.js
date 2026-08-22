@@ -20,8 +20,7 @@
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#F8FAFC' : '#070B12');
   };
   const storedTheme = localStorage.getItem('console-theme');
-  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  applyTheme(storedTheme || (prefersLight ? 'light' : 'dark'));
+  applyTheme(storedTheme || 'light');
   themeToggle?.addEventListener('click', () => {
     const next = body.classList.contains('theme-light') ? 'dark' : 'light';
     localStorage.setItem('console-theme', next);
