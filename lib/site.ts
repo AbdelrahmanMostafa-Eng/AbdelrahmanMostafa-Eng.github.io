@@ -15,8 +15,7 @@ export const site = {
   linkedinUrl: "https://www.linkedin.com/in/abdelrahmanmostafa-eng",
   instagramUrl: "https://www.instagram.com/abdelrahman_abouelkhair/",
   xUrl: "https://x.com/AbdElRahmanm988",
-  /** Optional. Leave empty to hide the email icon everywhere. */
-  email: "",
+  email: "abdelrahmanmostafa.eng@outlook.com",
   /** Optional. Leave empty to hide resume links everywhere. */
   resumeUrl: "",
   /** Contact form: set NEXT_PUBLIC_FORMSPREE_ID (or the FORMSPREE_ID repo secret) to enable direct delivery. */
@@ -35,7 +34,7 @@ export const nav = [
 
 export const stats = [
   { label: "GPA", value: "4.0", detail: "Grade 12, American Diploma" },
-  { label: "SAT", value: "1530", detail: "790 Math · 740 EBRW (superscore)" },
+  { label: "SAT Math", value: "790", detail: "600 EBRW in the same sitting · retaking for 1550+" },
   { label: "AIST Math 1", value: "36", detail: "ACT subject test, perfect score" },
   { label: "AIST Biology", value: "34", detail: "ACT subject test" },
 ]
