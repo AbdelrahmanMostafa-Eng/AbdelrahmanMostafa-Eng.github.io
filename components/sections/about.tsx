@@ -42,7 +42,7 @@ export function About() {
           <div className="lg:col-span-7">
             <Reveal className="text-lg leading-relaxed text-muted md:text-xl" delay={0.1}>
               <p className="text-pretty">
-                I&apos;m <span className="text-foreground">{site.fullName}</span>, a Grade 11 student in{" "}
+                I&apos;m <span className="text-foreground">{site.fullName}</span>, a Grade 12 student in{" "}
                 {profile?.location ?? site.location}, studying in a {site.school}. I write software that
                 simulates, analyzes and optimizes systems, most of it inspired by Formula SAE: vehicle
                 dynamics calculators, telemetry simulators and race-strategy tooling in Python.
