@@ -73,7 +73,7 @@ export function Footer() {
               <FooterLink href={`${site.githubUrl}/portfolio-roadmap`}>Portfolio roadmap (2026–27)</FooterLink>
               <FooterLink href="https://schoolhouse.world">Schoolhouse.world tutoring</FooterLink>
               <FooterLink href="https://www.spaceappschallenge.org">NASA Space Apps Challenge</FooterLink>
-              <FooterLink href="https://www.aalto.fi/en/study-options/bachelors-programme-in-science-and-technology-computer-engineering">
+              <FooterLink href="https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology">
                 Aalto Computer Engineering
               </FooterLink>
               {site.resumeUrl && <FooterLink href={site.resumeUrl}>Resume</FooterLink>}
