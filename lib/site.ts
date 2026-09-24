@@ -76,8 +76,8 @@ export const pathway = [
   {
     when: "Now — 2026",
     title: "Grade 12 in Saudi Arabia",
-    body: "American Diploma, 4.0 GPA. Building FSAE simulators, a local-first AI memory store, and full-stack web apps while tutoring on Schoolhouse.world.",
-    tags: ["4.0 GPA", "SAT 1530", "NASA Space Apps"],
+    body: "American Diploma, 4.0 GPA. Building automotive simulations, Torqon, AI systems, and full-stack products while tutoring on Schoolhouse.world.",
+    tags: ["4.0 GPA", "SAT 790 Math", "Torqon"],
   },
   {
     when: "Jan 7 – Jan 22, 2027",
@@ -101,7 +101,7 @@ export const pathway = [
 
 export const skills = {
   languages: ["Python", "C++", "JavaScript", "TypeScript", "Rust"],
-  tools: ["Git", "GitHub", "VS Code", "Claude", "Next.js", "Vercel"],
+  tools: ["Git", "GitHub", "VS Code", "Claude", "Next.js", "Vercel", "Supabase"],
   domains: [
     "Vehicle dynamics",
     "Telemetry & data analysis",
@@ -116,13 +116,12 @@ export const skills = {
 
 export const goals = [
   { text: "Maintain a 4.0 GPA", done: true },
-  { text: "Score 1500+ on the SAT", done: true },
-  { text: "Complete ACT Biology (34)", done: true },
+  { text: "Improve SAT toward 1550+", done: false },
   { text: "Participate in NASA Space Apps Challenge 2026", done: true },
   { text: "Reach 150–200+ volunteer hours on Schoolhouse", done: false },
-  { text: "Build and launch the home services app", done: false },
-  { text: "Take IELTS / TOEFL", done: false },
-  { text: "Submit the Aalto application by Jan 7, 2027", done: false },
+  { text: "Expand Torqon as a serious automotive AI platform", done: false },
+  { text: "Build projects across AI, software, systems, and engineering", done: false },
+  { text: "Submit the Aalto application during Jan 7–22, 2027", done: false },
   { text: "Secure a 100% tuition scholarship", done: false },
 ]
 

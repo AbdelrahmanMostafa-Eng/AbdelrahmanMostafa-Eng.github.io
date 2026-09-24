@@ -9,7 +9,6 @@ import { useGitHubSocials } from "@/lib/github"
 import { SectionHeading } from "../ui/section-heading"
 import { Reveal } from "../ui/reveal"
 import { BrandIcon, brandFor } from "../ui/brand-icon"
-import { Magnetic } from "../ui/magnetic"
 
 type Status = "idle" | "sending" | "sent" | "error" | "copied"
 
@@ -55,12 +54,9 @@ export function Contact() {
       setStatus("sent")
       return
     }
-    // No delivery channel configured: hand the message to the clipboard so it can be
-    // pasted into a LinkedIn message, which is always available.
     try {
       await navigator.clipboard.writeText(`${form.message}\n\n— ${form.name} (${form.email})`)
       setStatus("copied")
-      window.open(site.linkedinUrl, "_blank", "noopener,noreferrer")
     } catch {
       setStatus("error")
     }
@@ -152,13 +148,12 @@ export function Contact() {
                 <p id="contact-help" className="text-xs text-muted">
                   {canDeliver
                     ? "Delivered straight to my inbox. I reply within a couple of days."
-                    : "Sending copies your message and opens LinkedIn so you can paste it there."}
+                    : "Your email app will open with the message addressed to me."}
                 </p>
-                <Magnetic>
-                  <button
-                    type="submit"
-                    disabled={status === "sending"}
-                    className="inline-flex h-11 items-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent transition-shadow duration-300 hover:shadow-[0_0_0_1px_var(--accent),0_12px_40px_-8px_var(--accent-glow)] disabled:opacity-70"
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="group inline-flex h-11 items-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_0_1px_var(--accent),0_16px_42px_-10px_var(--accent-glow)] active:translate-y-0 disabled:opacity-70"
                   >
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.span
@@ -181,7 +176,7 @@ export function Contact() {
                         )}
                         {status === "copied" && (
                           <>
-                            <LuCopy className="h-4 w-4" /> Copied, opening LinkedIn
+                            <LuCopy className="h-4 w-4" /> Copied to clipboard
                           </>
                         )}
                         {status === "error" && <>Something went wrong, try again</>}
@@ -193,7 +188,6 @@ export function Contact() {
                       </motion.span>
                     </AnimatePresence>
                   </button>
-                </Magnetic>
               </div>
             </form>
           </Reveal>

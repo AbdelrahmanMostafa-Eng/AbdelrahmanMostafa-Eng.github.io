@@ -4,17 +4,17 @@
 
 :root {
   --background: #ffffff;
-  --background-2: #eaf9ee;
-  --foreground: #0a0f0c;
-  --muted: #5b6a60;
-  --muted-2: #8e9a92;
-  --surface: rgba(10, 15, 12, 0.03);
-  --surface-2: rgba(10, 15, 12, 0.06);
-  --border: rgba(10, 15, 12, 0.1);
-  --border-strong: rgba(10, 15, 12, 0.2);
-  --accent: #00ce37;
-  --accent-ink: #00902a;
-  --accent-soft: rgba(0, 206, 55, 0.12);
+  --background-2: #dcf7e4;
+  --foreground: #07100a;
+  --muted: #3f5145;
+  --muted-2: #65756a;
+  --surface: rgba(7, 16, 10, 0.045);
+  --surface-2: rgba(7, 16, 10, 0.085);
+  --border: rgba(7, 16, 10, 0.15);
+  --border-strong: rgba(7, 16, 10, 0.28);
+  --accent: #00b832;
+  --accent-ink: #007d23;
+  --accent-soft: rgba(0, 184, 50, 0.16);
   --accent-glow: rgba(0, 206, 55, 0.35);
   --on-accent: #041a0a;
   --radius: 0.75rem;
@@ -141,6 +141,22 @@
     radial-gradient(40% 40% at 10% 90%, var(--accent-soft) 0%, transparent 60%);
   opacity: 0.7;
   animation: glow-drift 36s ease-in-out infinite alternate;
+}
+
+.gradient-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse at 30% 30%, var(--accent-soft), transparent 42%);
+  opacity: 0.22;
+  filter: blur(34px);
+  animation: ambient-float 24s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-float {
+  0% { transform: translate3d(-3%, -2%, 0) scale(0.96); }
+  50% { transform: translate3d(5%, 4%, 0) scale(1.04); }
+  100% { transform: translate3d(-1%, 7%, 0) scale(1); }
 }
 
 @keyframes gradient-drift {

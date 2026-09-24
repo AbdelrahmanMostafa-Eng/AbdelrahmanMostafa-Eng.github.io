@@ -104,15 +104,13 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 1.15, ease }}
             className="mt-9 flex flex-wrap items-center gap-3"
           >
-            <Magnetic>
-              <a
-                href="#projects"
-                className="group relative inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-accent px-6 text-sm font-semibold text-on-accent transition-shadow duration-300 hover:shadow-[0_0_0_1px_var(--accent),0_12px_40px_-8px_var(--accent-glow)]"
-              >
-                <span className="relative z-10">See the projects</span>
-                <LuArrowDown className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-              </a>
-            </Magnetic>
+            <a
+              href="#projects"
+              className="group inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 text-sm font-semibold text-on-accent transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_0_1px_var(--accent),0_16px_42px_-10px_var(--accent-glow)] active:translate-y-0"
+            >
+              <span>See the projects</span>
+              <LuArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+            </a>
             <Magnetic>
               <a
                 href={site.githubUrl}
