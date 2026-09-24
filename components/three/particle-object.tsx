@@ -131,6 +131,9 @@ export function ParticleObject({ accent, dim, dark, count, interactive }: Props)
   const points = useRef<THREE.Points>(null)
   const core = useRef<THREE.Mesh>(null)
   const wire = useRef<THREE.LineSegments>(null)
+  const orbitA = useRef<THREE.Group>(null)
+  const orbitB = useRef<THREE.Group>(null)
+  const satellite = useRef<THREE.Mesh>(null)
   const { size, gl } = useThree()
 
   const pointer = useRef(new THREE.Vector2(0, 0))
@@ -242,6 +245,18 @@ export function ParticleObject({ accent, dim, dark, count, interactive }: Props)
     if (wire.current) {
       wire.current.rotation.copy(core.current!.rotation)
     }
+    if (orbitA.current) {
+      orbitA.current.rotation.x = t * 0.34 + targetTilt.current.y * 0.18
+      orbitA.current.rotation.y = t * 0.22
+    }
+    if (orbitB.current) {
+      orbitB.current.rotation.z = -t * 0.28 + targetTilt.current.x * 0.18
+      orbitB.current.rotation.x = Math.sin(t * 0.32) * 0.28
+    }
+    if (satellite.current) {
+      satellite.current.rotation.x += delta * 0.7
+      satellite.current.rotation.y += delta * 0.9
+    }
 
     const wantHover = interactive && pointerActive.current ? 1 : 0
     hover.current = THREE.MathUtils.damp(hover.current, wantHover, 4, delta)
@@ -290,6 +305,28 @@ export function ParticleObject({ accent, dim, dark, count, interactive }: Props)
       <lineSegments ref={wire} geometry={wireGeometry}>
         <lineBasicMaterial color={accent} transparent opacity={dark ? 0.55 : 0.6} />
       </lineSegments>
+
+      <group ref={orbitA} rotation={[0.4, 0.2, 0.2]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[1.22, 0.012, 8, 96]} />
+          <meshBasicMaterial color={accent} transparent opacity={dark ? 0.7 : 0.8} />
+        </mesh>
+        <mesh position={[1.22, 0, 0]}>
+          <icosahedronGeometry args={[0.075, 1]} />
+          <meshBasicMaterial color={accent} />
+        </mesh>
+      </group>
+
+      <group ref={orbitB} rotation={[1.1, 0.2, -0.45]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[1.56, 0.008, 8, 112]} />
+          <meshBasicMaterial color={accent} transparent opacity={dark ? 0.32 : 0.48} />
+        </mesh>
+        <mesh ref={satellite} position={[-1.56, 0, 0]}>
+          <octahedronGeometry args={[0.11, 0]} />
+          <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={dark ? 2 : 0.5} />
+        </mesh>
+      </group>
     </group>
   )
 }

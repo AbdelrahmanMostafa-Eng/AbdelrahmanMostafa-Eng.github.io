@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { LuArrowDown, LuArrowUpRight, LuMapPin } from "react-icons/lu"
 import { site } from "@/lib/site"
 import { useGitHubProfile, useGitHubRepos, relativeTime } from "@/lib/github"
-import { Magnetic } from "../ui/magnetic"
+import { CursorCircleLink } from "../ui/cursor-circle-button"
 import { BrandIcon } from "../ui/brand-icon"
 
 const HeroScene = dynamic(() => import("../three/hero-scene").then((m) => m.HeroScene), {
@@ -104,25 +104,23 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 1.15, ease }}
             className="mt-9 flex flex-wrap items-center gap-3"
           >
-            <a
+            <CursorCircleLink
               href="#projects"
-              className="group inline-flex h-12 items-center gap-2 rounded-full bg-accent px-6 text-sm font-semibold text-on-accent transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_0_1px_var(--accent),0_16px_42px_-10px_var(--accent-glow)] active:translate-y-0"
+              className="group h-12 rounded-full bg-accent px-6 text-sm font-semibold text-on-accent [--button-fill:var(--accent)] [--button-halo:#050805]"
             >
-              <span>See the projects</span>
+              See the projects
               <LuArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-            </a>
-            <Magnetic>
-              <a
-                href={site.githubUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="group inline-flex h-12 items-center gap-2 rounded-full border border-border-strong bg-surface px-6 text-sm font-medium transition-colors duration-300 hover:border-accent hover:bg-accent-soft"
-              >
-                <BrandIcon provider="github" className="h-4 w-4" />
-                GitHub
-                <LuArrowUpRight className="h-4 w-4 text-muted transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
-              </a>
-            </Magnetic>
+            </CursorCircleLink>
+            <CursorCircleLink
+              href={site.githubUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="group h-12 rounded-full border border-border-strong bg-surface px-6 text-sm font-medium [--button-fill:var(--surface)] [--button-halo:var(--accent)]"
+            >
+              <BrandIcon provider="github" className="h-4 w-4" />
+              GitHub
+              <LuArrowUpRight className="h-4 w-4 text-muted transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+            </CursorCircleLink>
           </motion.div>
 
           <motion.dl

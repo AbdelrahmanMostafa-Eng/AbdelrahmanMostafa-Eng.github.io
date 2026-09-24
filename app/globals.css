@@ -209,6 +209,61 @@
   box-shadow: 0 0 0 1px var(--accent-glow), 0 0 32px -6px var(--accent-glow);
 }
 
+.cursor-circle-button {
+  --cursor-x: 50%;
+  --cursor-y: 50%;
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.cursor-circle-button::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--button-fill, var(--accent));
+  z-index: -2;
+}
+
+.cursor-circle-button__halo {
+  position: absolute;
+  z-index: -1;
+  width: 10rem;
+  height: 10rem;
+  left: var(--cursor-x);
+  top: var(--cursor-y);
+  border-radius: 999px;
+  background: var(--button-halo, #050805);
+  transform: translate(-50%, -50%) scale(0.15);
+  opacity: 0;
+  filter: blur(0.2px);
+  transition: transform 450ms cubic-bezier(.22, 1, .36, 1), opacity 250ms ease;
+}
+
+.cursor-circle-button:hover .cursor-circle-button__halo,
+.cursor-circle-button:focus-visible .cursor-circle-button__halo {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.cursor-circle-button:hover,
+.cursor-circle-button:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px var(--accent), 0 16px 42px -12px var(--accent-glow);
+}
+
+.cursor-circle-button:active {
+  transform: translateY(0);
+}
+
+.cursor-circle-button > span:last-child {
+  transition: color 300ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-circle-button,
+  .cursor-circle-button__halo { transition: none; }
+}
+
 .marquee-track {
   animation: marquee 42s linear infinite;
 }

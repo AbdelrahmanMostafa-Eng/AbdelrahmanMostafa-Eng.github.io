@@ -9,6 +9,7 @@ import { useGitHubSocials } from "@/lib/github"
 import { SectionHeading } from "../ui/section-heading"
 import { Reveal } from "../ui/reveal"
 import { BrandIcon, brandFor } from "../ui/brand-icon"
+import { CursorCircleButton } from "../ui/cursor-circle-button"
 
 type Status = "idle" | "sending" | "sent" | "error" | "copied"
 
@@ -150,10 +151,10 @@ export function Contact() {
                     ? "Delivered straight to my inbox. I reply within a couple of days."
                     : "Your email app will open with the message addressed to me."}
                 </p>
-                <button
+                <CursorCircleButton
                   type="submit"
                   disabled={status === "sending"}
-                  className="group inline-flex h-11 items-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_0_1px_var(--accent),0_16px_42px_-10px_var(--accent-glow)] active:translate-y-0 disabled:opacity-70"
+                  className="h-11 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent [--button-fill:var(--accent)] [--button-halo:#050805] disabled:opacity-70"
                   >
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.span
@@ -187,7 +188,7 @@ export function Contact() {
                         )}
                       </motion.span>
                     </AnimatePresence>
-                  </button>
+                  </CursorCircleButton>
               </div>
             </form>
           </Reveal>
