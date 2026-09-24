@@ -255,8 +255,26 @@
   transform: translateY(0);
 }
 
-.cursor-circle-button > span:last-child {
-  transition: color 300ms ease;
+.cursor-circle-button__text-circle {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--button-halo-text, #fff);
+  pointer-events: none;
+  clip-path: circle(0 at var(--cursor-x) var(--cursor-y));
+  transition: clip-path 450ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.cursor-circle-button:hover .cursor-circle-button__text-circle,
+.cursor-circle-button:focus-visible .cursor-circle-button__text-circle {
+  clip-path: circle(1.2rem at var(--cursor-x) var(--cursor-y));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-circle-button__text-circle { transition: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

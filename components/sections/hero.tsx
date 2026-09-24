@@ -106,7 +106,7 @@ export function Hero() {
           >
             <CursorCircleLink
               href="#projects"
-              className="group h-12 rounded-full bg-accent px-6 text-sm font-semibold text-on-accent [--button-fill:var(--accent)] [--button-halo:#050805]"
+              className="group h-12 rounded-full bg-accent px-6 text-sm font-semibold text-on-accent [--button-fill:var(--accent)] [--button-halo:#050805] [--button-halo-text:#fff]"
             >
               See the projects
               <LuArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -115,7 +115,7 @@ export function Hero() {
               href={site.githubUrl}
               target="_blank"
               rel="noreferrer noopener"
-              className="group h-12 rounded-full border border-border-strong bg-surface px-6 text-sm font-medium [--button-fill:var(--surface)] [--button-halo:var(--accent)]"
+              className="group h-12 rounded-full border border-border-strong bg-surface px-6 text-sm font-medium [--button-fill:var(--surface)] [--button-halo:var(--accent)] [--button-halo-text:#031006]"
             >
               <BrandIcon provider="github" className="h-4 w-4" />
               GitHub

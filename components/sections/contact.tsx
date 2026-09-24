@@ -154,7 +154,7 @@ export function Contact() {
                 <CursorCircleButton
                   type="submit"
                   disabled={status === "sending"}
-                  className="h-11 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent [--button-fill:var(--accent)] [--button-halo:#050805] disabled:opacity-70"
+                  className="h-11 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent [--button-fill:var(--accent)] [--button-halo:#050805] [--button-halo-text:#fff] disabled:opacity-70"
                   >
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.span
