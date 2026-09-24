@@ -308,8 +308,8 @@ export function ParticleObject({ accent, dim, dark, count, interactive }: Props)
 
       <group ref={orbitA} rotation={[0.4, 0.2, 0.2]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.22, 0.012, 8, 96]} />
-          <meshBasicMaterial color={accent} transparent opacity={dark ? 0.7 : 0.8} />
+          <torusGeometry args={[1.22, 0.022, 10, 128]} />
+          <meshBasicMaterial color={accent} transparent opacity={dark ? 0.96 : 0.98} toneMapped={false} />
         </mesh>
         <mesh position={[1.22, 0, 0]}>
           <icosahedronGeometry args={[0.075, 1]} />
@@ -319,8 +319,8 @@ export function ParticleObject({ accent, dim, dark, count, interactive }: Props)
 
       <group ref={orbitB} rotation={[1.1, 0.2, -0.45]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.56, 0.008, 8, 112]} />
-          <meshBasicMaterial color={accent} transparent opacity={dark ? 0.32 : 0.48} />
+          <torusGeometry args={[1.56, 0.016, 10, 144]} />
+          <meshBasicMaterial color={accent} transparent opacity={dark ? 0.72 : 0.86} toneMapped={false} />
         </mesh>
         <mesh ref={satellite} position={[-1.56, 0, 0]}>
           <octahedronGeometry args={[0.11, 0]} />
