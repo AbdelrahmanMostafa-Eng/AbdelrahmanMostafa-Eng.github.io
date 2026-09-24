@@ -35,6 +35,27 @@ const intents: Intent[] = [
     }),
   },
   {
+    id: "latest",
+    patterns: [/latest|recent|newest|last (push|commit|update)/i],
+    answer: ({ projects }) => {
+      const latest = [...projects].sort(
+        (a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime(),
+      )[0]
+      if (!latest) return { text: "I could not load the repositories just now. GitHub is the source of truth.", links: [{ label: "GitHub", href: site.githubUrl }] }
+      return {
+        text: `The most recently updated repo is ${latest.name}, pushed ${relativeTime(latest.pushed_at)}. ${latest.summary}`,
+        links: [{ label: `Open ${latest.name}`, href: latest.html_url }],
+      }
+    },
+  },
+  {
+    id: "location",
+    patterns: [/where.*(live|based|from|located)|location|country|saudi/i],
+    answer: ({ profile }) => ({
+      text: `${profile?.location ?? site.location}. Time zone ${site.timezone}.`,
+    }),
+  },
+  {
     id: "do",
     patterns: [/what (do|does) (you|he) (do|build|make|work)/i, /what.*(working on|build)/i, /projects?/i, /portfolio/i, /repos?/i],
     answer: ({ projects, profile }) => {
@@ -46,20 +67,6 @@ const intents: Intent[] = [
           { label: "Projects", href: "#projects" },
           ...top.slice(0, 2).map((p) => ({ label: p.name, href: p.html_url })),
         ],
-      }
-    },
-  },
-  {
-    id: "latest",
-    patterns: [/latest|recent|newest|last (push|commit|update)/i],
-    answer: ({ projects }) => {
-      const latest = [...projects].sort(
-        (a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime(),
-      )[0]
-      if (!latest) return { text: "I could not load the repositories just now. GitHub is the source of truth.", links: [{ label: "GitHub", href: site.githubUrl }] }
-      return {
-        text: `The most recently updated repo is ${latest.name}, pushed ${relativeTime(latest.pushed_at)}. ${latest.summary}`,
-        links: [{ label: `Open ${latest.name}`, href: latest.html_url }],
       }
     },
   },
@@ -118,13 +125,6 @@ const intents: Intent[] = [
         ],
       }
     },
-  },
-  {
-    id: "location",
-    patterns: [/where.*(live|based|from|located)|location|country|saudi/i],
-    answer: ({ profile }) => ({
-      text: `${profile?.location ?? site.location}. Time zone ${site.timezone}.`,
-    }),
   },
   {
     id: "achievements",

@@ -276,14 +276,14 @@ export function ParticleObject({ accent, dim, dark, count, interactive }: Props)
       <mesh ref={core}>
         <icosahedronGeometry args={[0.82, 1]} />
         <meshPhysicalMaterial
-          color={dark ? "#0b0f0c" : "#e9efeb"}
-          metalness={dark ? 0.75 : 0.35}
-          roughness={0.28}
-          clearcoat={1}
-          clearcoatRoughness={0.2}
-          flatShading
-          emissive={accent}
-          emissiveIntensity={dark ? 0.06 : 0.02}
+        color={dark ? "#0b0f0c" : "#d6f5dd"}
+        metalness={dark ? 0.75 : 0.2}
+        roughness={dark ? 0.28 : 0.4}
+        clearcoat={1}
+        clearcoatRoughness={0.2}
+        flatShading
+        emissive={accent}
+        emissiveIntensity={dark ? 0.06 : 0.12}
         />
       </mesh>
 
