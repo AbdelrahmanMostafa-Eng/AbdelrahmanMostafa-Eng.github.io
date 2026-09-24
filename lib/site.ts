@@ -7,7 +7,7 @@ export const site = {
   role: "Aspiring Computer Engineer",
   headline: "Software that simulates, analyzes and optimizes real systems.",
   positioning:
-    "Grade 11 student in Saudi Arabia building simulation tools, telemetry pipelines and web apps on the way to a Computer Engineering degree at Aalto University.",
+    "Grade 12 student in Saudi Arabia building simulation tools, telemetry pipelines and web apps on the way to a Computer Engineering degree at Aalto University.",
   location: "Saudi Arabia",
   timezone: "Asia/Riyadh",
   url: "https://abdelrahmanmostafa-eng.github.io",
@@ -34,7 +34,7 @@ export const nav = [
 ]
 
 export const stats = [
-  { label: "GPA", value: "4.0", detail: "Grade 11, American Diploma" },
+  { label: "GPA", value: "4.0", detail: "Grade 12, American Diploma" },
   { label: "SAT", value: "1530", detail: "790 Math · 740 EBRW (superscore)" },
   { label: "AIST Math 1", value: "36", detail: "ACT subject test, perfect score" },
   { label: "AIST Biology", value: "34", detail: "ACT subject test" },
@@ -58,7 +58,7 @@ export const achievements = [
   },
   {
     title: "4.0 GPA, every semester",
-    detail: "Grade 11 in a Cognia-accredited American Diploma program.",
+    detail: "Grade 12 in a Cognia-accredited American Diploma program.",
     year: "2024–26",
   },
   {
@@ -76,7 +76,7 @@ export const achievements = [
 export const pathway = [
   {
     when: "Now — 2026",
-    title: "Grade 11 in Saudi Arabia",
+    title: "Grade 12 in Saudi Arabia",
     body: "American Diploma, 4.0 GPA. Building FSAE simulators, a local-first AI memory store, and full-stack web apps while tutoring on Schoolhouse.world.",
     tags: ["4.0 GPA", "SAT 1530", "NASA Space Apps"],
   },
