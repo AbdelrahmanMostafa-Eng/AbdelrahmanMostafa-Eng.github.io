@@ -123,8 +123,6 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  overflow: hidden;
-  isolation: isolate;
   pointer-events: none;
   background:
     radial-gradient(ellipse 58% 48% at 4% 0%, var(--light-pool-a), transparent 70%),
@@ -137,35 +135,8 @@
   will-change: background-position;
 }
 
-.ambient-video {
-  position: absolute;
-  inset: -4%;
-  z-index: 0;
-  width: 108%;
-  height: 108%;
-  object-fit: cover;
-  opacity: 0.72;
-  filter: saturate(1.18) contrast(1.08) brightness(0.62);
-  mix-blend-mode: screen;
-  animation: ambient-video-drift 42s ease-in-out infinite alternate;
-  transform: scale(1.06);
-}
-
-:not(.dark) .ambient-video {
-  opacity: 0.48;
-  filter: saturate(0.72) contrast(0.96) brightness(1.32) sepia(0.08);
-  mix-blend-mode: multiply;
-}
-
-@keyframes ambient-video-drift {
-  0% { transform: scale(1.06) translate3d(-1%, -0.5%, 0); }
-  50% { transform: scale(1.1) translate3d(0.8%, 0.6%, 0); }
-  100% { transform: scale(1.06) translate3d(-0.6%, 1%, 0); }
-}
-
 .gradient-backdrop::after {
   content: "";
-  z-index: 1;
   position: absolute;
   inset: 0;
   background-image: radial-gradient(
@@ -180,7 +151,6 @@
 
 .gradient-backdrop::before {
   content: "";
-  z-index: 1;
   position: absolute;
   inset: -20%;
   background: radial-gradient(ellipse at 30% 30%, var(--accent-soft), transparent 42%);
