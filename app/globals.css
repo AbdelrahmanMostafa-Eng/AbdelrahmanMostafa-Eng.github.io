@@ -131,7 +131,7 @@
     linear-gradient(135deg, var(--background) 0%, var(--background-2) 54%, var(--background) 100%);
   background-size: 145% 145%, 135% 135%, 150% 150%, 300% 300%;
   background-position: 0% 0%, 100% 100%, 45% 70%, 0% 0%;
-  animation: gradient-drift 28s ease-in-out infinite alternate, light-pool-drift 34s ease-in-out infinite alternate;
+  animation: light-pool-drift 34s ease-in-out infinite alternate;
   will-change: background-position;
 }
 
@@ -245,8 +245,8 @@
 .cursor-circle-button__halo {
   position: absolute;
   z-index: -1;
-  width: 2rem;
-  height: 2rem;
+  width: 2cm;
+  height: 2cm;
   left: var(--cursor-x);
   top: var(--cursor-y);
   border-radius: 999px;
@@ -282,6 +282,8 @@
   justify-content: center;
   color: var(--button-halo-text, #fff) !important;
   text-shadow: 0 0 12px color-mix(in srgb, var(--button-halo-text, #fff) 42%, transparent);
+  clip-path: circle(0 at var(--cursor-x) var(--cursor-y));
+  transition: clip-path 450ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .cursor-circle-button__text-circle * {
@@ -289,13 +291,11 @@
   stroke: currentColor;
   fill: currentColor;
   pointer-events: none;
-  clip-path: circle(0 at var(--cursor-x) var(--cursor-y));
-  transition: clip-path 450ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .cursor-circle-button:hover .cursor-circle-button__text-circle,
 .cursor-circle-button:focus-visible .cursor-circle-button__text-circle {
-  clip-path: circle(1rem at var(--cursor-x) var(--cursor-y));
+  clip-path: circle(1cm at var(--cursor-x) var(--cursor-y));
   mix-blend-mode: normal;
 }
 
