@@ -4,21 +4,24 @@
 
 :root {
   --background: #ffffff;
-  --background-2: #eaf9ee;
-  --foreground: #0a0f0c;
-  --muted: #5b6a60;
-  --muted-2: #8e9a92;
-  --surface: rgba(10, 15, 12, 0.03);
-  --surface-2: rgba(10, 15, 12, 0.06);
-  --border: rgba(10, 15, 12, 0.1);
-  --border-strong: rgba(10, 15, 12, 0.2);
-  --accent: #00ce37;
-  --accent-ink: #00902a;
-  --accent-soft: rgba(0, 206, 55, 0.12);
+  --background-2: #dcf7e4;
+  --foreground: #07100a;
+  --muted: #3f5145;
+  --muted-2: #65756a;
+  --surface: rgba(7, 16, 10, 0.045);
+  --surface-2: rgba(7, 16, 10, 0.085);
+  --border: rgba(7, 16, 10, 0.15);
+  --border-strong: rgba(7, 16, 10, 0.28);
+  --accent: #00b832;
+  --accent-ink: #007d23;
+  --accent-soft: rgba(0, 184, 50, 0.16);
   --accent-glow: rgba(0, 206, 55, 0.35);
   --on-accent: #041a0a;
   --radius: 0.75rem;
   --header-bg: rgba(255, 255, 255, 0.72);
+  --light-pool-a: rgba(0, 184, 50, 0.25);
+  --light-pool-b: rgba(0, 160, 43, 0.28);
+  --light-pool-c: rgba(78, 214, 117, 0.19);
 }
 
 .dark {
@@ -37,6 +40,9 @@
   --accent-glow: rgba(0, 255, 67, 0.45);
   --on-accent: #02130a;
   --header-bg: rgba(0, 0, 0, 0.55);
+  --light-pool-a: rgba(0, 255, 67, 0.7);
+  --light-pool-b: rgba(0, 255, 67, 0.46);
+  --light-pool-c: rgba(0, 131, 37, 0.34);
 }
 
 @theme inline {
@@ -81,7 +87,7 @@
 
   html,
   body {
-    background-color: var(--background);
+    background-color: transparent;
     color: var(--foreground);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11", "tnum";
@@ -118,15 +124,15 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    var(--background) 0%,
-    var(--background) 35%,
-    var(--background-2) 65%,
-    var(--background) 100%
-  );
-  background-size: 300% 300%;
-  animation: gradient-drift 28s ease-in-out infinite alternate;
+  background:
+    radial-gradient(ellipse 58% 48% at 4% 0%, var(--light-pool-a), transparent 70%),
+    radial-gradient(ellipse 48% 58% at 96% 100%, var(--light-pool-b), transparent 72%),
+    radial-gradient(ellipse 44% 42% at 48% 72%, var(--light-pool-c), transparent 75%),
+    linear-gradient(135deg, var(--background) 0%, var(--background-2) 54%, var(--background) 100%);
+  background-size: 145% 145%, 135% 135%, 150% 150%, 300% 300%;
+  background-position: 0% 0%, 100% 100%, 45% 70%, 0% 0%;
+  animation: light-pool-drift 34s ease-in-out infinite alternate;
+  will-change: background-position;
 }
 
 .gradient-backdrop::after {
@@ -139,8 +145,36 @@
       transparent 60%
     ),
     radial-gradient(40% 40% at 10% 90%, var(--accent-soft) 0%, transparent 60%);
-  opacity: 0.7;
+  opacity: 0.9;
   animation: glow-drift 36s ease-in-out infinite alternate;
+}
+
+.gradient-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse at 30% 30%, var(--accent-soft), transparent 42%);
+  opacity: 0.38;
+  filter: blur(34px);
+  animation: ambient-float 24s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-float {
+  0% { transform: translate3d(-3%, -2%, 0) scale(0.96); }
+  50% { transform: translate3d(5%, 4%, 0) scale(1.04); }
+  100% { transform: translate3d(-1%, 7%, 0) scale(1); }
+}
+
+@keyframes light-pool-drift {
+  0% {
+    background-position: 0% 0%, 100% 100%, 45% 70%, 0% 0%;
+  }
+  50% {
+    background-position: 20% 12%, 82% 76%, 60% 52%, 70% 42%;
+  }
+  100% {
+    background-position: 8% 28%, 100% 64%, 32% 82%, 100% 100%;
+  }
 }
 
 @keyframes gradient-drift {
@@ -191,6 +225,87 @@
 
 .accent-glow-shadow {
   box-shadow: 0 0 0 1px var(--accent-glow), 0 0 32px -6px var(--accent-glow);
+}
+
+.cursor-circle-button {
+  --cursor-x: 50%;
+  --cursor-y: 50%;
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.cursor-circle-button::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--button-fill, var(--accent));
+  z-index: -2;
+}
+
+.cursor-circle-button__halo {
+  position: absolute;
+  z-index: -1;
+  width: 2cm;
+  height: 2cm;
+  left: var(--cursor-x);
+  top: var(--cursor-y);
+  border-radius: 999px;
+  background: var(--button-halo, #050805);
+  transform: translate(-50%, -50%) scale(0.15);
+  opacity: 0;
+  filter: blur(0.2px);
+  transition: transform 450ms cubic-bezier(.22, 1, .36, 1), opacity 250ms ease;
+}
+
+.cursor-circle-button:hover .cursor-circle-button__halo,
+.cursor-circle-button:focus-visible .cursor-circle-button__halo {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.cursor-circle-button:hover,
+.cursor-circle-button:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px var(--accent), 0 16px 42px -12px var(--accent-glow);
+}
+
+.cursor-circle-button:active {
+  transform: translateY(0);
+}
+
+.cursor-circle-button__text-circle {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--button-halo-text, #fff) !important;
+  text-shadow: 0 0 12px color-mix(in srgb, var(--button-halo-text, #fff) 42%, transparent);
+  clip-path: circle(0 at var(--cursor-x) var(--cursor-y));
+  transition: clip-path 450ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.cursor-circle-button__text-circle * {
+  color: inherit !important;
+  stroke: currentColor;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.cursor-circle-button:hover .cursor-circle-button__text-circle,
+.cursor-circle-button:focus-visible .cursor-circle-button__text-circle {
+  clip-path: circle(1cm at var(--cursor-x) var(--cursor-y));
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-circle-button__text-circle { transition: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-circle-button,
+  .cursor-circle-button__halo { transition: none; }
 }
 
 .marquee-track {

@@ -12,6 +12,7 @@ import {
   SiNextdotjs,
   SiVercel,
   SiClaude,
+  SiSupabase,
 } from "react-icons/si"
 import { VscVscode } from "react-icons/vsc"
 import type { IconType } from "react-icons"
@@ -31,6 +32,7 @@ const iconFor: Record<string, IconType> = {
   Claude: SiClaude,
   "Next.js": SiNextdotjs,
   Vercel: SiVercel,
+  Supabase: SiSupabase,
 }
 
 const ticker = [...skills.languages, ...skills.tools]
