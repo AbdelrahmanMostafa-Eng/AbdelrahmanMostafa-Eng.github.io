@@ -29,7 +29,7 @@ export function CursorCircleLink({ className = "", children, onPointerMove, onPo
       className={`${base} cursor-circle-button ${className}`}
     >
       <span aria-hidden="true" className="cursor-circle-button__halo" />
-      <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+      <span className="relative z-[1] inline-flex items-center gap-2">{children}</span>
       <span aria-hidden="true" className="cursor-circle-button__text-circle">
         <span className="inline-flex items-center gap-2">{children}</span>
       </span>
@@ -60,7 +60,7 @@ export function CursorCircleButton({ className = "", children, onPointerMove, on
       className={`${base} cursor-circle-button ${className}`}
     >
       <span aria-hidden="true" className="cursor-circle-button__halo" />
-      <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+      <span className="relative z-[1] inline-flex items-center gap-2">{children}</span>
       <span aria-hidden="true" className="cursor-circle-button__text-circle">
         <span className="inline-flex items-center gap-2">{children}</span>
       </span>
