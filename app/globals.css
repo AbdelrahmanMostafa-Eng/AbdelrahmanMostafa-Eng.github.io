@@ -152,21 +152,9 @@
 }
 
 :not(.dark) .ambient-video {
-  opacity: 0.16;
-  filter: saturate(0.58) contrast(0.9) brightness(1.42) sepia(0.04);
+  opacity: 0.48;
+  filter: saturate(0.72) contrast(0.96) brightness(1.32) sepia(0.08);
   mix-blend-mode: multiply;
-}
-
-:not(.dark) .gradient-backdrop::after {
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72)),
-    radial-gradient(60% 50% at 80% 10%, rgba(0, 184, 50, 0.12) 0%, transparent 60%),
-    radial-gradient(40% 40% at 10% 90%, rgba(0, 184, 50, 0.1) 0%, transparent 60%);
-  opacity: 1;
-}
-
-:not(.dark) .gradient-backdrop::before {
-  opacity: 0.16;
 }
 
 @keyframes ambient-video-drift {
