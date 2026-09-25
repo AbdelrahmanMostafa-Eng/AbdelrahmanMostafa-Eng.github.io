@@ -2,6 +2,7 @@ import { Header } from "@/components/header"
 import { Hero } from "@/components/sections/hero"
 import { About } from "@/components/sections/about"
 import { Projects } from "@/components/sections/projects"
+import { Contributions } from "@/components/sections/contributions"
 import { Pathway } from "@/components/sections/pathway"
 import { Skills } from "@/components/sections/skills"
 import { Contact } from "@/components/sections/contact"
@@ -19,6 +20,7 @@ export default function HomePage() {
         <Hero />
         <About />
         <Projects />
+        <Contributions />
         <Pathway />
         <Skills />
         <Contact />

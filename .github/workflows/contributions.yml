@@ -1,0 +1,46 @@
+name: Update GitHub contributions
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch contribution calendar
+        env:
+          CONTRIBUTIONS_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs')
+          const query = `query { user(login: "AbdelrahmanMostafa-Eng") { contributionsCollection { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount } } } } } }`
+          fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+              authorization: `bearer ${process.env.CONTRIBUTIONS_TOKEN}`,
+              'content-type': 'application/json',
+              'user-agent': 'abdelrahman-portfolio-contributions',
+            },
+            body: JSON.stringify({ query }),
+          }).then(async (response) => {
+            if (!response.ok) throw new Error(`GitHub GraphQL returned ${response.status}`)
+            const payload = await response.json()
+            if (payload.errors?.length) throw new Error(payload.errors.map((e) => e.message).join('; '))
+            const calendar = payload.data.user.contributionsCollection.contributionCalendar
+            const output = `export type ContributionDay = { date: string; contributionCount: number }\nexport type ContributionWeek = { contributionDays: ContributionDay[] }\nexport type ContributionsSnapshot = { totalContributions: number; weeks: ContributionWeek[]; generatedAt: string }\n\nexport const contributionsSnapshot: ContributionsSnapshot = ${JSON.stringify({ ...calendar, generatedAt: new Date().toISOString() }, null, 2)}\n\nexport function isContributionSnapshotStale(snapshot: ContributionsSnapshot) { return false }\n`
+            fs.writeFileSync('lib/contributions-snapshot.ts', output)
+          }).catch((error) => { console.error(error); process.exit(1) })
+          NODE
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/contributions-snapshot.ts
+          git diff --cached --quiet || git commit -m "chore: update GitHub contributions snapshot"
+          git push
