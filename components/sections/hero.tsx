@@ -53,8 +53,8 @@ export function Hero() {
     <section id="top" className="relative overflow-hidden pt-16">
       <div className="grid-texture absolute inset-0 -z-10" aria-hidden="true" />
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 pb-16 pt-12 md:px-8 lg:grid-cols-12 lg:gap-6 lg:pb-24 lg:pt-20">
-        <div className="lg:col-span-7">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 pb-16 pt-12 md:grid-cols-12 md:gap-6 md:px-8 lg:pb-24 lg:pt-20">
+        <div className="md:col-span-7">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.4, delay: 0.5, ease }}
-          className="relative mx-auto aspect-square w-full max-w-[420px] lg:col-span-5 lg:max-w-none"
+          className="relative mx-auto aspect-square w-full max-w-[420px] md:col-span-5 md:max-w-none"
         >
           <CornerTicks />
           <div className="absolute inset-0">

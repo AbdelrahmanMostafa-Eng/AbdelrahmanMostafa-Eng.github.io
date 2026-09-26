@@ -12,8 +12,7 @@ import { Reveal } from "../ui/reveal"
 const levels = ["#082611", "#0a5a25", "#0ba934", "#24e85a", "#00ff43"]
 
 function useSkylineCapability() {
-  const { viewport } = useThree()
-  return typeof window !== "undefined" && viewport.width > 6 && window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  return typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
 }
 
 function SkylineBars({ dark, visible = true }: { dark: boolean; visible?: boolean }) {
