@@ -30,37 +30,29 @@ function SkylineBars({ dark, visible = true }: { dark: boolean; visible?: boolea
     group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -0.36 + pointer.y * 0.04, 0.035)
   })
 
-  const helixDays = days.slice(-36)
   return (
-    <group ref={group} position={[0, -0.72, 0]} rotation={[-0.24, 0.16, 0]}>
-      {helixDays.map((day, index) => {
+    <group ref={group} position={[-3.8, -0.82, 0]} scale={[0.62, 1.35, 0.62]} rotation={[-0.36, 0.16, 0]}>
+      {days.map((day, index) => {
         const count = day.contributionCount
         const level = count === 0 ? 0 : Math.min(4, Math.ceil((count / max) * 4))
-        const progress = index / Math.max(1, helixDays.length - 1)
-        const angle = progress * Math.PI * 4.4
-        const y = 1.95 - progress * 3.9
-        const height = full ? 0.18 + Math.sqrt(count / max) * 0.72 : 0.16
-        const hoveredScale = hovered?.date === day.date ? [1.35, 1.18, 1.35] : [1, 1, 1]
+        const height = full ? 0.16 + Math.sqrt(count / max) * 2.2 : 0.12
+        const x = (index % 52) * 0.15
+        const y = Math.floor(index / 52) * 0.15
         return (
-          <group key={`${day.date}-${index}`} rotation={[0, angle, 0]} position={[0, y, 0]}>
-            <mesh
-              position={[0, height / 2, 1.35]}
-              scale={hoveredScale as [number, number, number]}
-              onPointerOver={() => setHovered(day)}
-              onPointerOut={() => setHovered(null)}
-            >
-              <boxGeometry args={[0.12, height, 0.12]} />
-              <meshStandardMaterial color={levels[level]} emissive={levels[level]} emissiveIntensity={dark ? 0.62 + level * 0.32 : 0.22 + level * 0.16} roughness={0.56} metalness={0.22} />
-            </mesh>
-          </group>
+          <mesh
+            key={`${day.date}-${index}`}
+            position={[x, height / 2 + y, 0]}
+            scale={hovered?.date === day.date ? [1.14, 1.22, 1.14] : [1, 1, 1]}
+            onPointerOver={() => setHovered(day)}
+            onPointerOut={() => setHovered(null)}
+          >
+            <boxGeometry args={[0.12, height, 0.12]} />
+            <meshStandardMaterial color={levels[level]} emissive={levels[level]} emissiveIntensity={dark ? 0.5 + level * 0.28 : 0.18 + level * 0.12} roughness={0.62} metalness={0.18} />
+          </mesh>
         )
       })}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <torusGeometry args={[1.35, 0.012, 8, 96]} />
-        <meshBasicMaterial color={dark ? "#00ff43" : "#00a82d"} transparent opacity={0.3} />
-      </mesh>
       {hovered && (
-        <Html position={[0, 1.25, 1.5]} center>
+        <Html position={[26 * 0.15, 1.35, 0.2]} center>
           <div className="whitespace-nowrap rounded-lg border border-border-strong bg-background/95 px-3 py-2 text-xs shadow-2xl backdrop-blur">
             <strong className="block text-foreground">{hovered.contributionCount} contributions</strong>
             <span className="text-muted">{hovered.date}</span>
