@@ -357,3 +357,7 @@
     animation: none !important;
   }
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
