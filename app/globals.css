@@ -149,20 +149,6 @@
   animation: glow-drift 36s ease-in-out infinite alternate;
 }
 
-.skyline-frame {
-  pointer-events: none;
-  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
-  background: linear-gradient(90deg, var(--accent) 1px, transparent 1px) 0 0 / 18px 1px no-repeat,
-    linear-gradient(var(--accent) 1px, transparent 1px) 0 0 / 1px 18px no-repeat,
-    linear-gradient(-90deg, var(--accent) 1px, transparent 1px) 100% 0 / 18px 1px no-repeat,
-    linear-gradient(var(--accent) 1px, transparent 1px) 100% 0 / 1px 18px no-repeat,
-    linear-gradient(90deg, var(--accent) 1px, transparent 1px) 0 100% / 18px 1px no-repeat,
-    linear-gradient(var(--accent) 1px, transparent 1px) 0 100% / 1px 18px no-repeat,
-    linear-gradient(-90deg, var(--accent) 1px, transparent 1px) 100% 100% / 18px 1px no-repeat,
-    linear-gradient(var(--accent) 1px, transparent 1px) 100% 100% / 1px 18px no-repeat;
-  opacity: 0.72;
-}
-
 .gradient-backdrop::before {
   content: "";
   position: absolute;
