@@ -103,13 +103,6 @@ export function ContributionSkyline({ compact = false }: { compact?: boolean }) 
       </div>
       <div className="absolute inset-x-4 bottom-4 flex justify-between text-[10px] uppercase tracking-[0.18em] text-muted"><span>Hover a day</span><span>Live · GitHub data</span></div>
       <div className="mt-4 md:hidden"><Skyline2D /></div>
-      {compact && (
-        <div className="absolute inset-x-0 -bottom-24 grid grid-cols-3 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-muted-2 md:-bottom-20">
-          <span><strong className="block text-foreground">01</strong>Scroll in</span>
-          <span><strong className="block text-foreground">02</strong>Watch it rise</span>
-          <span><strong className="block text-foreground">03</strong>Hover a day</span>
-        </div>
-      )}
     </div>
   )
 }
