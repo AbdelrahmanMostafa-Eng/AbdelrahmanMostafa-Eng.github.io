@@ -1,6 +1,5 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import { motion } from "motion/react"
 import { useEffect, useState } from "react"
 import { LuArrowDown, LuArrowUpRight, LuMapPin } from "react-icons/lu"
@@ -8,11 +7,7 @@ import { site } from "@/lib/site"
 import { useGitHubProfile, useGitHubRepos, relativeTime } from "@/lib/github"
 import { CursorCircleLink } from "../ui/cursor-circle-button"
 import { BrandIcon } from "../ui/brand-icon"
-
-const HeroScene = dynamic(() => import("../three/hero-scene").then((m) => m.HeroScene), {
-  ssr: false,
-  loading: () => <div className="h-full w-full" aria-hidden="true" />,
-})
+import { ContributionSkyline } from "./contributions"
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -143,14 +138,8 @@ export function Hero() {
         >
           <CornerTicks />
           <div className="absolute inset-0">
-            <HeroScene />
+            <ContributionSkyline compact />
           </div>
-          <span className="absolute bottom-3 left-3 text-[10px] tracking-[0.18em] uppercase text-muted-2 md:bottom-4 md:left-4">
-            Move your cursor
-          </span>
-          <span className="absolute right-3 bottom-3 text-[10px] tracking-[0.18em] uppercase text-muted-2 tabular-nums md:right-4 md:bottom-4">
-            Real-time · WebGL
-          </span>
         </motion.div>
       </div>
     </section>

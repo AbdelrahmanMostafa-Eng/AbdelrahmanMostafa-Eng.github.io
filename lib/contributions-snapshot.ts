@@ -13,19 +13,22 @@ export type ContributionsSnapshot = {
   generatedAt: string
 }
 
-// Updated by .github/workflows/contributions.yml. The initial empty state keeps
-// the visual stable until the first repository workflow run completes.
+// Placeholder-for-preview-only: replaced by the daily GitHub Actions snapshot.
+const previewDays = Array.from({ length: 364 }, (_, index) => {
+  const wave = Math.sin(index * 0.31) + Math.sin(index * 0.077) * 0.7
+  const spike = index % 47 === 0 || index % 83 === 0 ? 18 + (index % 9) : 0
+  const contributionCount = Math.max(0, Math.round(wave * 2.2 + 3 + spike))
+  const date = new Date(Date.UTC(2026, 0, 1 + index)).toISOString().slice(0, 10)
+  return { date, contributionCount }
+})
+
 export const contributionsSnapshot: ContributionsSnapshot = {
-  totalContributions: 0,
-  generatedAt: "not-yet-synced",
-  weeks: Array.from({ length: 52 }, (_, week) => ({
-    contributionDays: Array.from({ length: 7 }, (_, day) => ({
-      date: `2026-W${String(week + 1).padStart(2, "0")}-${day + 1}`,
-      contributionCount: 0,
-    })),
-  })),
+  totalContributions: previewDays.reduce((total, day) => total + day.contributionCount, 0),
+  generatedAt: "preview-placeholder",
+  weeks: Array.from({ length: 52 }, (_, week) => ({ contributionDays: previewDays.slice(week * 7, week * 7 + 7) })),
 }
 
 export function isContributionSnapshotStale(snapshot: ContributionsSnapshot) {
-  return snapshot.generatedAt === "not-yet-synced"
+  if (snapshot.generatedAt === "preview-placeholder" || snapshot.generatedAt === "not-yet-synced") return true
+  return Date.now() - new Date(snapshot.generatedAt).getTime() > 48 * 60 * 60 * 1000
 }
